@@ -61,6 +61,42 @@ class SignUpForm(forms.Form):
            raise forms.ValidationError('비밀번호와 비밀번호 확인란의 값이 일치하지 않습니다')
        return password2
 
+class SignInForm(forms.Form):
+    email = forms.EmailField(
+        label='이메일',
+        error_messages={
+            'required':'이메일을 입력하세요'
+        },
+         max_length=64
+    )
+    password = forms.CharField(
+        label='비밀번호',
+        error_messages={
+            'required':'비밀번호를 입력하세요'
+        },
+        widget=forms.PasswordInput
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        email = cleaned_data.get('email')
+        password =cleaned_data.get('password')
+
+        if email and password:
+            try:
+                account = Account.objects.get(email=email)
+            except Account.DoesNotExist:
+                self.add_error('email','존재하지 않는 메일입니다.')
+                return
+            
+            if not check_password(password, account.password):
+                self.add_error('password','비밀번호가 틀렸습니다.')
+
+    
+
+
+
     
 
 
