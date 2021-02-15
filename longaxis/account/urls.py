@@ -7,6 +7,5 @@ from account import views
 app_name = 'account'
 
 urlpatterns = [
-    
-
+    path('register/', views.SignUpView.as_view()),
 ]
