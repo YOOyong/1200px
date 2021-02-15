@@ -301,8 +301,8 @@ modules.xml
 # profiling data
 
 ### vscode ###
-.vscode/
 .vscode/*
+..vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
