@@ -30,7 +30,7 @@ class SignInView(FormView):
     success_url = '/'
 
     def form_valid(self, form):
-        self.request.session['user'] = form.data.get('email')
+        self.request.session['user'] = Account.objects.get(email=form.data.get('email')).nickname
         print(self.request.session['user'])
         return super().form_valid(form)
 
