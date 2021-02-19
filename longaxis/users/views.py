@@ -17,6 +17,8 @@ class SignUpView(FormView):
         )
         user.set_password(form.data.get('password1'))
         user.save()
+        #가입 후 로그인
+        login(self.request, user)
 
         return super().form_valid(form)
 
