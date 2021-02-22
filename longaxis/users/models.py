@@ -66,3 +66,13 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+# class Profile(models.Model):
+#     #use one to one
+#     pass 
+
+# class Follow(models.Model):
+#     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+#     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    
+

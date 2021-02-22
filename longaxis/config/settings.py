@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
+    
+    #taggit
+    'taggit.apps.TaggitAppConfig',
+
+    #apps
+    'users.apps.UsersConfig',
+    'gallery.apps.GalleryConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -127,4 +133,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+#taggit
+TAGGIT_CASE_INSENSITIVE = True  #대소문 구별 X
+TAGGIT_LIMIT = 50
+
+#session timeout
+SESSION_COOKIE_AGE = 1200
+SESSION_SAVE_EVERY_REQUEST = True
 
