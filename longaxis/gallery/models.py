@@ -27,9 +27,9 @@ def user_directory_path(instance, filename):
 class Photo(models.Model):
     photographer = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='title',blank=False)
-    photo = models.ImageField(upload_to=user_directory_path, width_field='width', height_field='height', verbose_name='Photo', null=False)
-    width = models.PositiveIntegerField()
-    height = models.PositiveIntegerField()
+    img_width = models.PositiveIntegerField(null = True, blank = True)
+    img_height = models.PositiveIntegerField(null = True, blank = True)
+    image = models.ImageField(upload_to=user_directory_path, width_field='img_width', height_field='img_height', verbose_name='Photo', null=False)
     description = models.TextField(max_length=300, verbose_name='description', blank=True)
     date_posted = models.DateField(auto_now_add = True)
     tags = TaggableManager(blank=True)
