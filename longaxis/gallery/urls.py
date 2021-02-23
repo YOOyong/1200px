@@ -7,4 +7,5 @@ app_name = 'gallery'
 
 urlpatterns = [
     path('', views.GalleryView.as_view()),
+    path('upload/', views.PhotoUploadView.as_view()),
 ]

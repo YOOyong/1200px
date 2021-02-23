@@ -140,9 +140,9 @@ body{
   <div class='mx-5'>
     <section>
     {% for photo in photos %}
-    <div style="width: calc({{photo.img_width}}px * 250 / {{photo.img_height}}) ;  flex-grow: calc({{photo.img_width}} / {{photo.img_height}}) ;">
+    <div style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}}) ;  flex-grow: calc({{photo.image.width}} / {{photo.image.height}}) ;">
       <div class="content">
-       <i style="padding-bottom: calc({{photo.img_height }} / {{photo.img_width }} * 100%)"></i>
+       <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
         <img src="{{ photo.image.url }}" alt="">
         
         <!-- 오버레이부분 -->

@@ -13,7 +13,6 @@ def user_directory_path(instance, filename):
     randomstr = ''.join((random.choice(chars)) for x in range(6))
     _now = datetime.now()
 
-
     return 'gallery/{username}/{year}/{month}/{day}/{basename}{randomstr}{ext}'.format(
         username = instance.photographer.username,
         year = _now.strftime('%Y'),
@@ -27,11 +26,11 @@ def user_directory_path(instance, filename):
 class Photo(models.Model):
     photographer = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='title',blank=False)
-    img_width = models.PositiveIntegerField(null = True, blank = True)
-    img_height = models.PositiveIntegerField(null = True, blank = True)
-    image = models.ImageField(upload_to=user_directory_path, width_field='img_width', height_field='img_height', verbose_name='Photo', null=False)
+    # img_width = models.PositiveIntegerField(null = True, blank = True)
+    # img_height = models.PositiveIntegerField(null = True, blank = True)
+    image = models.ImageField(upload_to=user_directory_path, verbose_name='photo', null=False)
     description = models.TextField(max_length=300, verbose_name='description', blank=True)
-    date_posted = models.DateField(auto_now_add = True)
+    date_posted = models.DateTimeField(auto_now_add = True)
     tags = TaggableManager(blank=True)
 
     def __str__(self):
