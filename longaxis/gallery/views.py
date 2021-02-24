@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Photo
 # Create your views here.
@@ -26,4 +26,8 @@ class PhotoUploadView(LoginRequiredMixin, CreateView):
         else:
             return redirect('/')
 
+class PhotoDetailView(DetailView):
+    model = Photo
+    template_name = 'photo_detail.html'
+    
 

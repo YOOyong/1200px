@@ -21,7 +21,6 @@ img {
   position: absolute;
   top: 0;
   width: 100%;
-  vertical-align: bottom;
 }
 *, *:before, *:after{
   margin: 0;
@@ -71,7 +70,7 @@ body{
 }
 
 .content .content-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9),rgba(0, 0, 0, 0) 50%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0) 25%);
   position: absolute;
   height:100%;
   width: 100%;
@@ -110,7 +109,7 @@ body{
 .content-details .test-left{
   position: absolute;
   left: 10px;
-  bottom:10px;
+  bottom:5px;
   color: #fff;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -120,7 +119,7 @@ body{
 .content-details .test-right{
   position: absolute;
   right: 10px;
-  bottom:10px;
+  bottom:5px;
   color: #fff;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -140,7 +139,7 @@ body{
   <div class='mx-5'>
     <section>
     {% for photo in photos %}
-    <div style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}}) ;  flex-grow: calc({{photo.image.width}} / {{photo.image.height}}) ;">
+    <div style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}}) ;  flex-grow: calc({{photo.image.width}} * 250 / {{photo.image.height}}) ;">
       <div class="content">
        <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
         <img src="{{ photo.image.url }}" alt="">

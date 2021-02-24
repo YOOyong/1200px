@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block contents %}
-            
+
 <div class="mx-5">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
-        {{ form }}
+            {{ form }}
         </table>
         <div>
-        <button type="button submit" class="btn btn-primary">upload</button>
-        <div>
+            <button type="button submit" class="btn btn-primary">upload</button>
+            <div>
     </form>
 </div>
 

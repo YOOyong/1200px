@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block contents %}
+<div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col-md-8">
+            <div align="center"><img src="{{ object.image.url }}" class="img-fluid"></div>
+            <div class="mr-">
+                <p>{{ object.photographer }}</p>
+            </div>
+            <p>{{ object.title }} </p>
+            <p>{{ object.description }} </p>
+            <P>{{ object.date_uploaded}} </P>
+        </div>
+        <div class="col-md-4">
+            <div class="container my-3">
+                <form>
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="add comments">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary btn-sm" type="button">ADD</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="card border-secondary mb-3">
+                <div class="card-header">12313 comments</div>
+                <div class="card-body">
+                    <p class="card-title"> yoo </p>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                    <p class="text-right"><small>{{ object.date_posted }}</small></p>
+                    <hr class="my-3">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
