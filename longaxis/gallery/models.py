@@ -15,7 +15,7 @@ def user_directory_path(instance, filename):
     _now = datetime.now()
 
     return 'gallery/{username}/{year}/{month}/{day}/{basename}{randomstr}{ext}'.format(
-        username = instance.photographer.username,
+        username = instance.user.username,
         year = _now.strftime('%Y'),
         month = _now.strftime('%m'),
         day = _now.strftime('%d'),
@@ -25,7 +25,7 @@ def user_directory_path(instance, filename):
         )
 
 class Photo(models.Model):
-    photographer = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='title',blank=False)
     image = models.ImageField(upload_to=user_directory_path, verbose_name='photo', null=False)
     description = models.TextField(max_length=300, verbose_name='description', blank=True)
