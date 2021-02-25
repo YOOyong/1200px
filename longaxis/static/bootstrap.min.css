@@ -3063,7 +3063,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     min-width: 5rem;
     padding: .5rem 0;
     margin: .125rem 0 0;
-    font-size: .875rem;
+    font-size: 1rem;
     color: #55595c;
     text-align: left;
     list-style: none;
@@ -4044,7 +4044,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     padding-top: .335938rem;
     padding-bottom: .335938rem;
     margin-right: 1rem;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     line-height: inherit;
     white-space: nowrap
 }
@@ -7743,6 +7743,9 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 .mt-5, .my-5 {
     margin-top: 3rem!important
 }
+.mt-6, .my-6 {
+    margin-top: 5.3rem!important
+}
 
 .mr-5, .mx-5 {
     margin-right: 3rem!important
@@ -9400,7 +9403,6 @@ a.text-dark:focus, a.text-dark:hover {
 
 .navbar {
     font-size: .765625rem;
-    text-transform: uppercase;
     font-weight: 600
 }
 
@@ -9430,7 +9432,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .nav-item {
-    margin-right: 2rem
+    margin-right: 2rem;
+    font-size: 1rem
 }
 
 .btn {
@@ -9475,7 +9478,6 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    text-transform: uppercase;
     letter-spacing: 3px
 }
 
@@ -9485,7 +9487,6 @@ h1, h2, h3, h4, h5, h6 {
 
 th {
     font-size: .765625rem;
-    text-transform: uppercase
 }
 
 .table td, .table th {

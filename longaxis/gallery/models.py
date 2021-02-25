@@ -3,6 +3,7 @@ from django.shortcuts import reverse
 from users.models import User
 from taggit.managers import TaggableManager
 from datetime import datetime
+from django.conf import settings
 import random
 import os
 # Create your models here.
@@ -26,8 +27,6 @@ def user_directory_path(instance, filename):
 class Photo(models.Model):
     photographer = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='title',blank=False)
-    # img_width = models.PositiveIntegerField(null = True, blank = True)
-    # img_height = models.PositiveIntegerField(null = True, blank = True)
     image = models.ImageField(upload_to=user_directory_path, verbose_name='photo', null=False)
     description = models.TextField(max_length=300, verbose_name='description', blank=True)
     date_posted = models.DateTimeField(auto_now_add = True)
@@ -35,9 +34,16 @@ class Photo(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('gallery:detail' , args=[str(self.id)])
 
-    # def get_absolute_url(self):
-    #     return None
+    def delete(self, *args, **kargs):
+        if self.image:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
+        super(Photo, self).delete(*args, **kargs)
+
+    
 
 
 # class Likes(models.Model):

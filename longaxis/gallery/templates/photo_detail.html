@@ -10,8 +10,14 @@
             <p>{{ object.title }} </p>
             <p>{{ object.description }} </p>
             <P>{{ object.date_uploaded}} </P>
+            
+            <a href ="{% url 'gallery:delete' object.id %}"class="btn btn-primary">delete</a>
+
+            <br>
+
         </div>
         <div class="col-md-4">
+            {% if user.is_athenticate %}
             <div class="container my-3">
                 <form>
                     <fieldset>
@@ -19,13 +25,14 @@
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="add comments">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary btn-sm" type="button">ADD</button>
+                                    <input  type="submit" class="btn btn-primary btn-sm">ADD</button>
                                 </div>
                             </div>
                         </div>
                     </fieldset>
                 </form>
             </div>
+            {% endif %}
             <div class="card border-secondary mb-3">
                 <div class="card-header">12313 comments</div>
                 <div class="card-body">

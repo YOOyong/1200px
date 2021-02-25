@@ -29,11 +29,7 @@ img {
   -moz-box-sizing:border-box;
   box-sizing: border-box;
 }
-body{
-  background: #f9f9f9;
-  font-size: 16px;
-  font-family: 'Raleway', sans-serif;
-}
+
 .main-title{
   color: #2d2d2d;
   text-align: center;
@@ -136,7 +132,7 @@ body{
 {% endblock%}
 
 {% block contents %}
-  <div class='mx-5'>
+  <div class='mx-4'>
     <section>
     {% for photo in photos %}
     <div style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}}) ;  flex-grow: calc({{photo.image.width}} * 250 / {{photo.image.height}}) ;">
@@ -145,7 +141,7 @@ body{
         <img src="{{ photo.image.url }}" alt="">
         
         <!-- 오버레이부분 -->
-        <a href = "#"><div class="content-overlay"></div></a>  <!-- 디테일 가는 링크 -->
+        <a href = "{{ photo.get_absolute_url }}"><div class="content-overlay"></div></a>  <!-- 디테일 가는 링크 -->
           <div class="content-details">
             <a href = "#"> <!-- 유저프로필 링크 -->
               <div class="test-left cut-text">

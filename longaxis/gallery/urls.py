@@ -6,8 +6,8 @@ from gallery import views
 app_name = 'gallery'
 
 urlpatterns = [
-    path('', views.GalleryView.as_view()),
+    path('', views.GalleryView.as_view(), name='gallery'),
     path('upload/', views.PhotoUploadView.as_view()),
-    path('<int:pk>/', views.PhotoDetailView.as_view()),
-
+    path('<int:pk>/', views.PhotoDetailView.as_view(), name = 'detail'),
+    path('<int:pk>/delete', views.PhotoDeleteView.as_view(), name='delete'),
 ]
