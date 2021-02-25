@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config.views import OwnerOnlyMixin
 from django.http import Http404
@@ -37,4 +37,12 @@ class PhotoDeleteView(OwnerOnlyMixin, DeleteView):
     model = Photo
     template_name = 'photo_delete.html'
     success_url = reverse_lazy('gallery:gallery')
+
+class PhotoUpdateView(OwnerOnlyMixin, UpdateView):
+    model = Photo
+    template_name = 'photo_update.html'
+    fields = ['image','title','description']
+    success_url = reverse_lazy('gallery:gallery')
+
+
 

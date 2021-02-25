@@ -38,10 +38,11 @@ class Photo(models.Model):
     def get_absolute_url(self):
         return reverse('gallery:detail' , args=[str(self.id)])
 
-    def delete(self, *args, **kargs):
-        if self.image:
-            os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
-        super(Photo, self).delete(*args, **kargs)
+    #django-claenup 에서 대신해줌
+    # def delete(self, *args, **kargs):
+    #     if self.image:
+    #         os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
+    #     super(Photo, self).delete(*args, **kargs)
 
     
 

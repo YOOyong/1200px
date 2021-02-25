@@ -10,4 +10,5 @@ urlpatterns = [
     path('upload/', views.PhotoUploadView.as_view()),
     path('<int:pk>/', views.PhotoDetailView.as_view(), name = 'detail'),
     path('<int:pk>/delete', views.PhotoDeleteView.as_view(), name='delete'),
+    path('<int:pk>/update', views.PhotoUpdateView.as_view(), name='update'),
 ]

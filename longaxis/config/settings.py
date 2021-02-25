@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     #apps
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
+
+    #cleanup
+    'django_cleanup',
 ]
 
 AUTH_USER_MODEL = 'users.User'

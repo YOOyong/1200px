@@ -11,8 +11,12 @@
             <p>{{ object.description }} </p>
             <P>{{ object.date_uploaded}} </P>
             
-            <a href ="{% url 'gallery:delete' object.id %}"class="btn btn-primary">delete</a>
+            {% if object.user == request.user %}
 
+            <a href ="{% url 'gallery:delete' object.id %}"class="btn btn-primary">delete</a>
+            <a href ="{% url 'gallery:update' object.id %}"class="btn btn-primary">update</a>
+            
+            {% endif %}
             <br>
 
         </div>

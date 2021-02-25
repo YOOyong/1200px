@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+<div class="mx-5">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <div>
+            <button type="button submit" class="btn btn-primary">수정하기</button>
+            <div>
+    </form>
+</div>
+
+{% endblock %}
