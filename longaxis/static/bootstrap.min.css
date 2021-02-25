@@ -3924,6 +3924,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
         transition: none
     }
 }
+/* added  */
+@media (max-width:1000px){
+    .divider {
+          height: 1px;
+          margin: 9px 0;
+          overflow: hidden;
+          background-color: #e5e5e5;
+      }
+  }
 
 .nav {
     display: -ms-flexbox;
