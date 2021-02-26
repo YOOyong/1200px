@@ -3,7 +3,9 @@
 {% block contents %}
 
 <h1>프로필 임시</h1>
+{% if object.profile_image %}
 <img src="{{ object.profile_image.url }}" alt="">
+{%endif%}
 <div class="row justify-content-md-center mt-5">
     
 
@@ -16,6 +18,13 @@
            <p> {{ object.user }} </p>
            <p></p> {{ object.state_message }}</p>
         </div>
-    </div> 
+
+    </div>
+
+   
 </div>
+
+{% if request.user == object.user %}
+<a href= "{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
+{% endif %} 
 {% endblock %}

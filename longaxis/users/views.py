@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import FormView, DetailView
+from django.views.generic import UpdateView, DetailView, FormView
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from config.views import OwnerOnlyMixin
 from .models import User, Profile
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, ProfileUpdateForm
 # Create your views here.
 
 class SignUpView(FormView):
@@ -38,10 +40,23 @@ class LoginView(FormView):
 class ProfileView(DetailView):
     model = Profile
     template_name = "profile.html"
-    object
-    
+
     def get_object(self):
-        return get_object_or_404(Profile, user__username=self.kwargs['username'])   
+        return get_object_or_404(Profile, user__username=self.kwargs['username']) 
+
+class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
+    model = Profile
+    template_name = 'profile_update.html'
+    success_url = '/'
+    fields = ['state_message', "intro", 'profile_image']
+
+    def get_object(self):
+        return get_object_or_404(Profile, user__username=self.kwargs['username'])
+
+
+
+    
+    
 
 
 

@@ -103,13 +103,6 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
 
 
-
-
-
-
-
-
-
 # class Follow(models.Model):
 #     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
 #     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
