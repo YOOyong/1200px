@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Profile
 
 class SignUpForm(forms.ModelForm):
     email = forms.EmailField(label='이메일', error_messages={'required': '이메일을 입력하세요.'},
@@ -62,5 +62,15 @@ class LoginForm(forms.Form):
                     self.add_error('password', forms.ValidationError('비밀번호를 확인하세요'))
             except User.DoesNotExist:
                     self.add_error('email', forms.ValidationError('존재하지 않는 아이디입니다.'))
+
+
+class ProfileUpdateForm(forms.Form):
+
+    state_message = forms.CharField(label = '상태메세지')
+    intro = forms.CharField(max_length=500,label='자기소개')
+    profile_image = forms.ImageField()
+
+    class Meta:
+        model = Profile
     
 

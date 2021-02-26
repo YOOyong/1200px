@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+<h1>프로필 임시</h1>
+<img src="{{ object.profile_image.url }}" alt="">
+<div class="row justify-content-md-center mt-5">
+    
+
+    <div class="card border-secondary col-md-3">
+
+        <div class="card-title">
+                프로필 임시
+        </div>
+        <div class="card-body">
+           <p> {{ object.user }} </p>
+           <p></p> {{ object.state_message }}</p>
+        </div>
+    </div> 
+</div>
+{% endblock %}

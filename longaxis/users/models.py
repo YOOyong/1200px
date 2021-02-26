@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.core.exceptions import ObjectDoesNotExist
+import random
+import os
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -67,9 +72,43 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-# class Profile(models.Model):
-#     #use one to one
-#     pass 
+
+def user_directory_path(instance, filename):
+    basename, file_extension = os.path.splitext(filename)
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+    randomstr = ''.join((random.choice(chars)) for x in range(6))
+
+    return 'profile/{username}/{basename}{randomstr}{ext}'.format(
+        username = instance.user.username,
+        basename = basename,
+        randomstr = randomstr,
+        ext = file_extension,
+        )
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete= models.CASCADE)
+    profile_image = models.ImageField(blank= True, null = True ,default='profile/default_profile.jpg', upload_to=user_directory_path)
+    state_message = models.CharField(max_length=100, blank=True)
+    intro = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+#user의 save()가 실행될 때  profile도 save() 실행되도록 함
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    try:
+        instance.profile.save()
+    except ObjectDoesNotExist:
+        Profile.objects.create(user=instance)
+
+
+
+
+
+
+
+
 
 # class Follow(models.Model):
 #     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')

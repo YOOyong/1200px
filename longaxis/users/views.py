@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
-from django.views.generic import FormView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import FormView, DetailView
 from django.contrib.auth import login, logout, authenticate
-from .models import User
+from .models import User, Profile
 from .forms import SignUpForm, LoginForm
 # Create your views here.
 
@@ -34,6 +34,14 @@ class LoginView(FormView):
         login(self.request, user)
 
         return super().form_valid(form)
+
+class ProfileView(DetailView):
+    model = Profile
+    template_name = "profile.html"
+    object
+    
+    def get_object(self):
+        return get_object_or_404(Profile, user__username=self.kwargs['username'])   
 
 
 
