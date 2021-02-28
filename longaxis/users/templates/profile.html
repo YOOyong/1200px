@@ -6,25 +6,45 @@
 {% if object.profile_image %}
 <img src="{{ object.profile_image.url }}" alt="">
 {%endif%}
-<div class="row justify-content-md-center mt-5">
-    
 
-    <div class="card border-secondary col-md-3">
+<!-- 자기자신이 아니면 팔로우 버튼 출력 -->
+{% if request.user.is_authenticated and request.user != object.user %}
+<div class="text-center">
 
-        <div class="card-title">
-                프로필 임시
+    <form method="POST" action="{% url 'follow' %}">
+        {% csrf_token %}
+        <input type="hidden" name='follow_to' , value="{{ object.user }}">
+        <button type="submit" class="btn btn-primary">팔로우 테스트</button>
+    </form>
+<div>
+{% endif%}
+
+        <div class="row justify-content-md-center mt-5">
+
+            <div class="card border-secondary col-md-3">
+
+                <div class="card-title">
+                    프로필 임시
+                </div>
+                <div class="card-body">
+                    <p> {{ object.user }} </p>
+                    <p> {{ object.state_message }}</p>
+
+                    <p> '이 사람이' 팔로우 하는 사람 리스트 </p>
+                    {% for follow in object.user.following.all %}
+                    <p> {{ follow.follow_to }}</p>
+                    {% endfor%}
+
+                    <br>
+
+                    <p> '이 사람을' 팔로우 하는 사람 리스트 </p>
+                    {% for follow in object.user.follower.all %}
+                    <p> {{ follow.follow_from }}</p>
+                    {% endfor%}
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-           <p> {{ object.user }} </p>
-           <p></p> {{ object.state_message }}</p>
-        </div>
-
-    </div>
-
-   
-</div>
-
-{% if request.user == object.user %}
-<a href= "{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
-{% endif %} 
-{% endblock %}
+        {% if request.user == object.user %}
+        <a href="{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
+        {% endif %}
+        {% endblock %}

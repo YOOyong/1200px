@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Profile
+from .models import User, Profile, Follow
 # Register your models here.
 
 class ProfileInline(admin.StackedInline):
@@ -29,5 +29,10 @@ class UserAdmin(UserAdmin):
             return list()
         return super(UserAdmin, self).get_inline_instances(request, obj)
 
+
+class FollowAdmin(admin.ModelAdmin):
+    list_display =['follow_from', 'follow_to','created']
+
 admin.site.register(User, UserAdmin)
+admin.site.register(Follow, FollowAdmin)
 admin.site.unregister(Group)

@@ -39,7 +39,7 @@
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
             aria-expanded="false">{{ user.username }}</a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="{% url 'users:profile' user.username %}">Profile</a>
             <a class="dropdown-item" href="/user/logout">Logout</a>
           </div>
         <li role='separator' class="nav-item divider"></li>

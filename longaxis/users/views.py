@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import UpdateView, DetailView, FormView
+from django.views.generic import UpdateView, DetailView, FormView, View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config.views import OwnerOnlyMixin
-from .models import User, Profile
+from .models import User, Profile, Follow
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
 # Create your views here.
 
@@ -41,9 +41,11 @@ class ProfileView(DetailView):
     model = Profile
     template_name = "profile.html"
 
+    #url에서 받아온 username으로 object를 가져옴.
     def get_object(self):
         return get_object_or_404(Profile, user__username=self.kwargs['username']) 
 
+#프로필 수정
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
     model = Profile
     template_name = 'profile_update.html'
@@ -53,6 +55,25 @@ class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
     def get_object(self):
         return get_object_or_404(Profile, user__username=self.kwargs['username'])
 
+
+class FollowView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        follow_from = request.user
+        follow_to_username = request.POST.get('follow_to')
+        follow_to = get_object_or_404(User, username=follow_to_username)
+    
+        try: #삭제를 일단 시도
+            follow_obj = Follow.objects.get(follow_from=follow_from, follow_to=follow_to)
+            follow_obj.delete()
+        except Follow.DoesNotExist: #없다는 에러 나면 새로 만든다.
+            follow_obj = Follow.objects.create(follow_from=follow_from, follow_to=follow_to)
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+        
+
+ 
+        
 
 
     
