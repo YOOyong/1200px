@@ -19,7 +19,7 @@ class SignUpView(FormView):
         )
         user.set_password(form.data.get('password1'))
         user.save()
-        #가입 후 로그인
+        #login after sign up
         login(self.request, user)
 
         return super().form_valid(form)
@@ -45,7 +45,24 @@ class ProfileView(DetailView):
     def get_object(self):
         return get_object_or_404(Profile, user__username=self.kwargs['username']) 
 
-#프로필 수정
+    #굳이 여기서 처리해야 하는가??
+    def get_context_data(self, *args, **kwargs):
+        object = self.get_object()
+        context = super().get_context_data(*args, **kwargs)
+        
+        #get total followers and following
+        total_followers = object.user.total_followers()
+        total_following = object.user.total_following()
+        
+        #is request user follow this profile user?
+        is_follow = True if self.request.user.following.filter(id = object.user.id).exists() else False
+       
+        context['total_followers'] = total_followers
+        context['total_following'] = total_following
+        context['is_follow'] = is_follow
+        
+        return context
+        
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
     model = Profile
     template_name = 'profile_update.html'
@@ -71,6 +88,7 @@ class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
 #         return redirect(request.META.get('HTTP_REFERER'))
 
 class FollowView(LoginRequiredMixin, View):
+
     def post(self, request, *args, **kwargs):
         follow_to_username = request.POST.get('follow_to')
         follow_to = get_object_or_404(User, username = follow_to_username)

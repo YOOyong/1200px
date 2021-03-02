@@ -68,6 +68,13 @@ class User(AbstractBaseUser):
         # Simplest possible answer: Yes, always
         return True
 
+    def total_following(self):
+        return self.following.count()
+
+    def total_followers(self):
+        return self.followers.count()
+
+
     @property
     def is_staff(self):
         "Is the user a member of staff?"
