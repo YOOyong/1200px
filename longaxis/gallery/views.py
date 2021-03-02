@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from config.views import OwnerOnlyMixin
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from .models import Photo
+import json
 # Create your views here.
 
 
@@ -33,6 +36,14 @@ class PhotoDetailView(DetailView):
     model = Photo
     template_name = 'photo_detail.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data()
+        object = self.get_object()
+        total_likes =  object.total_likes()
+
+        context['total_likes'] = total_likes
+        return context
+
 class PhotoDeleteView(OwnerOnlyMixin, DeleteView):
     model = Photo
     template_name = 'photo_delete.html'
@@ -43,6 +54,33 @@ class PhotoUpdateView(OwnerOnlyMixin, UpdateView):
     template_name = 'photo_update.html'
     fields = ['image','title','description']
     success_url = reverse_lazy('gallery:gallery')
+
+@login_required
+def photo_like(request):
+    if request.method == 'POST':
+        user = request.user
+        pk = request.POST.get('pk')
+        photo = get_object_or_404(Photo, pk=pk)
+        
+        if photo.likes.filter(id = user.id).exists():
+            #unlike
+            photo.likes.remove(user)
+            flag = False
+        else:
+            #like
+            photo.likes.add(user)
+            flag = True
+
+        like_count = photo.total_likes()
+
+        context = {
+            'total_likes':like_count,
+            'flag' : flag
+        }
+    
+    return HttpResponse(json.dumps(context), content_type="application/json")
+
+        
 
 
 

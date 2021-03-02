@@ -31,6 +31,7 @@ class Photo(models.Model):
     description = models.TextField(max_length=300, verbose_name='description', blank=True)
     date_posted = models.DateTimeField(auto_now_add = True)
     tags = TaggableManager(blank=True)
+    likes = models.ManyToManyField(User, blank=True, default=None, related_name='likes')
 
     def __str__(self):
         return self.title
@@ -38,20 +39,16 @@ class Photo(models.Model):
     def get_absolute_url(self):
         return reverse('gallery:detail' , args=[str(self.id)])
 
+    def total_likes(self):
+        return self.likes.count()
+
+
     #django-claenup 에서 대신해줌
     # def delete(self, *args, **kargs):
     #     if self.image:
     #         os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
     #     super(Photo, self).delete(*args, **kargs)
 
-    
-
-
-# class Likes(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_likes')
-#     photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='photo_likes')
-
-    
 
 
     
