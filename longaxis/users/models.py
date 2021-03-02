@@ -39,13 +39,13 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-
     email = models.EmailField(verbose_name='email',
                               max_length=255, unique=True)
     username = models.CharField(
         verbose_name='username', max_length=20, unique=True)
     date_joined = models.DateField(default=timezone.now)
     last_login = models.DateField(auto_now=True)
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -107,20 +107,20 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
 
 
-class Follow(models.Model):
-    follow_from = models.ForeignKey(
-        User, related_name='following', on_delete=models.CASCADE)
-    follow_to = models.ForeignKey(
-        User, related_name='follower', on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+# class Follow(models.Model):
+#     follow_from = models.ForeignKey(
+#         User, related_name='following', on_delete=models.CASCADE)
+#     follow_to = models.ForeignKey(
+#         User, related_name='follower', on_delete=models.CASCADE)
+#     created = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['follow_from', 'follow_to'], name='unique_follow')
-        ]
+#     class Meta:
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=['follow_from', 'follow_to'], name='unique_follow')
+#         ]
 
-        ordering = ['-created']
+#         ordering = ['-created']
 
-    def __str__(self):
-        return f"{self.follow_from} follows {self.follow_to}"
+#     def __str__(self):
+#         return f"{self.follow_from} follows {self.follow_to}"

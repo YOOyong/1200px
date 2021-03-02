@@ -31,15 +31,15 @@
                     <p> {{ object.state_message }}</p>
 
                     <p> '이 사람이' 팔로우 하는 사람 리스트 </p>
-                    {% for follow in object.user.following.all %}
-                    <p> {{ follow.follow_to }}</p>
+                    {% for following in object.user.following.all %}
+                    <p> {{ following }}</p>
                     {% endfor%}
 
                     <br>
 
                     <p> '이 사람을' 팔로우 하는 사람 리스트 </p>
-                    {% for follow in object.user.follower.all %}
-                    <p> {{ follow.follow_from }}</p>
+                    {% for follower in object.user.followers.all %}
+                    <p> {{ follower }}</p>
                     {% endfor%}
                 </div>
             </div>
