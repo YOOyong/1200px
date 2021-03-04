@@ -6,7 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from config.views import OwnerOnlyMixin
 from django.http import Http404, JsonResponse
-from .models import Photo
+from .models import Photo, Comment
+from .forms import CommentForm
 import json
 # Create your views here.
 
@@ -39,8 +40,10 @@ class PhotoDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
         object = self.get_object()
+        
         total_likes =  object.total_likes()
-
+        
+        context['comment_form'] = CommentForm
         context['total_likes'] = total_likes
         return context
 
@@ -80,7 +83,32 @@ def photo_like(request):
     
     return HttpResponse(json.dumps(context), content_type="application/json")
 
-        
+@login_required
+def add_comment(request, pk):
+    parent_photo = get_object_or_404(Photo, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.parent_photo = parent_photo
+            comment.user = request.user
+            comment.save()
+
+            return redirect(parent_photo.get_absolute_url())
+   
+    return redirect(parent_photo.get_absolute_url())
+
+@login_required
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    parent_photo = comment.parent_photo
+
+    if (request.user == comment.user) or request.user.is_admin:
+        comment.delete()
+        return redirect(parent_photo.get_absolute_url())
+    else:
+        raise PermissionError
+
 
 
 

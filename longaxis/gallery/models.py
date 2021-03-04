@@ -42,12 +42,23 @@ class Photo(models.Model):
     def total_likes(self):
         return self.likes.count()
 
-
     #django-claenup 에서 대신해줌
     # def delete(self, *args, **kargs):
     #     if self.image:
     #         os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
     #     super(Photo, self).delete(*args, **kargs)
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='comments')
+    comment_text = models.CharField(max_length=300, verbose_name='comment_text', blank=False)
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"[photo_pk{self.parent_photo.id}] {self.user}'s comment"
+
+    
+    
 
 
 

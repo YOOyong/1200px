@@ -137,7 +137,7 @@ img {
   <div class='mx-4'>
     <section>
     {% for photo in photos %}
-    <div style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}}) ;  flex-grow: calc({{photo.image.width}} * 250 / {{photo.image.height}}) ;">
+    <div style="width: calc({{photo.image.width}}px * 300 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 300 / {{photo.image.height}});">
       <div class="content">
        <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
         <img src="{{ photo.image.url }}" alt="">

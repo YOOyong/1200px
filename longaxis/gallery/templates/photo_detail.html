@@ -5,71 +5,115 @@
         <div class="col-md-8">
             <div align="center"><img src="{{ object.image.url }}" class="img-fluid"></div>
             <div class="mr-">
-                <a href="{% url 'users:profile' object.user %}"><h3>{{ object.user }}</h3></a>
+                <a href="{% url 'users:profile' object.user %}">
+                    <h3>{{ object.user }}</h3>
+                </a>
             </div>
             <p>{{ object.title }} </p>
             <p>{{ object.description }} </p>
             <P>{{ object.date_uploaded}} </P>
-            <p id = 'total_likes' > {{ total_likes }} </P>
-            
+            <p id='total_likes'> {{ total_likes }} </P>
+            {% for user in object.likes.all %}
+                {{ user }}
+            {% endfor %}
+
             {% if object.user == request.user %}
 
-            <a href ="{% url 'gallery:delete' object.id %}"class="btn btn-primary">delete</a>
-            <a href ="{% url 'gallery:update' object.id %}"class="btn btn-primary">update</a>
-            
+            <a href="{% url 'gallery:delete' object.id %}" class="btn btn-primary">delete</a>
+            <a href="{% url 'gallery:update' object.id %}" class="btn btn-primary">update</a>
+
             {% endif %}
             <br>
 
             <button class='like_button btn btn-primary' value="{{object.id}}">좋아요 테스트</button>
-            
-
         </div>
+
+        <!-- comment section -->
         <div class="col-md-4">
-            {% if user.is_athenticate %}
-            <div class="container my-3">
-                <form>
-                    <fieldset>
-                        <div class="form-group">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="add comments">
-                                <div class="input-group-append">
-                                    <input  type="submit" class="btn btn-primary btn-sm">ADD</button>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
+            {% if user.is_authenticated%}
+            <div class=" my-3">
+                <p class='mb-0 ml-2'>Leave a comment ! </p>
+                <!-- 장고 폼을 쓰면서 인풋 그룹으로 한줄에 버튼을 쓰려면 폼 자체를 인풋그룹으로 만들어야 함.  -->
+                <!-- https://stackoverflow.com/questions/61342133/django-bootstrap-input-group-not-rendering-desired-html-css-with-form -->
+                <form class="input-group" id='comment_form' method="POST"
+                    action="{{ photo.get_absolute_url }}add_comment/">
+                    {% csrf_token %}
+                    {% for field in comment_form %}
+                    <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
+                        name="{{ field.name }}">
+                    {% if field.errors %}
+                    <div class='invalid-feedback'>
+                        <small class='text-danger'>{{ field.errors }}</samll>
+                    </div>
+                    {% endif %}
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary btn-sm">ADD</button>
+                    </div>
+                    {%endfor%}
                 </form>
             </div>
             {% endif %}
+            {% if photo.comments.exists %}
             <div class="card border-secondary mb-3">
-                <div class="card-header">12313 comments</div>
+                <div class="card-header">{{ object.comments.count }} comments</div>
                 <div class="card-body">
-                    <p class="card-title"> yoo </p>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                    <p class="text-right"><small>{{ object.date_posted }}</small></p>
+                    {% for comment in object.comments.all %}
+                    <div class="card-title">
+                        {{comment.user}}
+                        {% if request.user == comment.user %}
+                        <a href="#" id='comment-{{comment.pk}}-delete-modal' data-toggle='modal'
+                            data-target='#deleteCommentModal-{{comment.pk}}'>
+                            <i class="fas fa-times float-right mt-1"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <p class="card-text">{{comment.comment_text}}</p>
+                    <p class="text-right"><small>{{ comment.date_posted }}</small></p>
                     <hr class="my-3">
+                    <!-- Modal -->
+                    <div class="modal fade" id='deleteCommentModal-{{comment.pk}}' tabindex="-1" role="dialog"
+                        aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <p class="font-weight-bold">댓글을 삭제하시겠습니까?</p>
+                                    <button type="button" class="close" data-dismiss='modal' aria-label='Close'>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="text-right mr-1">
+                                    <a type="button" class='btn btn-primary'
+                                        data-dismiss="modal">취소</a>
+                                    <a role="button" class="btn btn-danger"
+                                        href='/gallery/delete_comment/{{comment.pk}}/'>삭제</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
+<!-- scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
-  $(".like_button").click(function(){
-    var pk = $(this).attr('value')
-    $.ajax({
-      type: "POST", 
-      url: "{% url 'gallery:photo_like' %}", // 통신할 url을 지정
-      data: {'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, // 서버로 데이터 전송시 옵션
-      dataType: "json", 
+    $(".like_button").click(function () {
+        var pk = $(this).attr('value')
+        $.ajax({
+            type: "POST",
+            url: "{% url 'gallery:photo_like' %}", // 통신할 url을 지정
+            data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션
+            dataType: "json",
 
-      success: function(response){
-        $("#total_likes").html(response.total_likes);
-      },
-    });
-  })
+            success: function (response) {
+                $("#total_likes").html(response.total_likes);
+            },
+        });
+    })
 </script>
 
 

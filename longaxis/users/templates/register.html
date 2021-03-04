@@ -18,9 +18,7 @@
                     placeholder="{{ field.label }}" name="{{ field.name }}">
             </div>
             {% if field.errors %}
-            <div class="mb-3">
-                {{ field.errors }}
-            </div>
+            <samll class='text-danger'>{{ field.errors }}</samll>
             {% endif%}
             {% endfor %}
             <div class="text-center">
