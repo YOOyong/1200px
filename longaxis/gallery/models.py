@@ -53,6 +53,7 @@ class Comment(models.Model):
     parent_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='comments')
     comment_text = models.CharField(max_length=300, verbose_name='comment_text', blank=False)
     date_posted = models.DateTimeField(auto_now_add=True)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True,blank=True,related_name='sub_comment', default=None)
 
     def __str__(self):
         return f"[photo_pk{self.parent_photo.id}] {self.user}'s comment"

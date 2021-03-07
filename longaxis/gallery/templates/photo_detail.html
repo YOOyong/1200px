@@ -14,7 +14,7 @@
             <P>{{ object.date_uploaded}} </P>
             <p id='total_likes'> {{ total_likes }} </P>
             {% for user in object.likes.all %}
-                {{ user }}
+            {{ user }}
             {% endfor %}
 
             {% if object.user == request.user %}
@@ -40,24 +40,26 @@
                     {% csrf_token %}
                     {% for field in comment_form %}
                     <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
-                        name="{{ field.name }}">
+                        name="{{ field.name }}" required maxlength="300">
                     {% if field.errors %}
                     <div class='invalid-feedback'>
                         <small class='text-danger'>{{ field.errors }}</samll>
                     </div>
                     {% endif %}
+                    {%endfor%}
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary btn-sm">ADD</button>
                     </div>
-                    {%endfor%}
                 </form>
             </div>
             {% endif %}
+
             {% if photo.comments.exists %}
             <div class="card border-secondary mb-3">
                 <div class="card-header">{{ object.comments.count }} comments</div>
                 <div class="card-body">
                     {% for comment in object.comments.all %}
+                    {% if not comment.parent_comment %}
                     <div class="card-title">
                         {{comment.user}}
                         {% if request.user == comment.user %}
@@ -69,7 +71,24 @@
                     </div>
                     <p class="card-text">{{comment.comment_text}}</p>
                     <p class="text-right"><small>{{ comment.date_posted }}</small></p>
+                    {% if comment.sub_comment.exists %}
+                    {%for sub_comment in comment.sub_comment.all %}
+                    <div class="card-title">
+                        {{sub_comment.user}}
+                        {% if request.user == sub_comment.user %}
+                        <a href="#" id='comment-{{comment.pk}}-delete-modal' data-toggle='modal'
+                            data-target='#deleteCommentModal-{{comment.pk}}'>
+                            <i class="fas fa-times float-right mt-1"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <p class="card-text">{{sub_comment.comment_text}}</p>
+                    <p class="text-right"><small>{{ sub_comment.date_posted }}</small></p>
+                    {%endfor%}
+                    {%else%}
                     <hr class="my-3">
+                    {%endif%}
+                    {%endif %}
                     <!-- Modal -->
                     <div class="modal fade" id='deleteCommentModal-{{comment.pk}}' tabindex="-1" role="dialog"
                         aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
@@ -82,8 +101,7 @@
                                     </button>
                                 </div>
                                 <div class="text-right mr-1">
-                                    <a type="button" class='btn btn-primary'
-                                        data-dismiss="modal">취소</a>
+                                    <a type="button" class='btn btn-primary' data-dismiss="modal">취소</a>
                                     <a role="button" class="btn btn-danger"
                                         href='/gallery/delete_comment/{{comment.pk}}/'>삭제</a>
                                 </div>

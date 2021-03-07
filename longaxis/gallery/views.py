@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
+from django.template import RequestContext
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -92,11 +93,16 @@ def add_comment(request, pk):
             comment = form.save(commit=False)
             comment.parent_photo = parent_photo
             comment.user = request.user
+            #요청이 대댓글 요청이면.
+            if request.POST.get('parent_comment'):
+                p_comment_pk = request.POST.get('parent_comment')
+                comment.parent_photo = get_object_or_404(Comment, pk=p_comment_pk)
+                
             comment.save()
-
             return redirect(parent_photo.get_absolute_url())
-   
+            
     return redirect(parent_photo.get_absolute_url())
+
 
 @login_required
 def delete_comment(request, pk):
