@@ -5597,7 +5597,7 @@ a.close.disabled {
     -ms-flex-pack: justify;
     justify-content: space-between;
     padding: 1rem 1rem;
-    border-bottom: 1px solid #eceeef
+    /* border-bottom: 1px solid #eceeef */
 }
 
 .modal-header .close {
@@ -9477,7 +9477,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    letter-spacing: 3px
+    letter-spacing: 1px
 }
 
 .text-secondary {

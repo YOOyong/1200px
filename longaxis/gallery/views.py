@@ -96,7 +96,7 @@ def add_comment(request, pk):
             #요청이 대댓글 요청이면.
             if request.POST.get('parent_comment'):
                 p_comment_pk = request.POST.get('parent_comment')
-                comment.parent_photo = get_object_or_404(Comment, pk=p_comment_pk)
+                comment.parent_comment = get_object_or_404(Comment, pk=p_comment_pk)
                 
             comment.save()
             return redirect(parent_photo.get_absolute_url())
