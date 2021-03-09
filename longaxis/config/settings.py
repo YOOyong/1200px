@@ -126,7 +126,7 @@ USE_L10N = True
 
 USE_TZ = False
 
-LOGOUT_REDIRECT_URL = '/user/login/'
+LOGIN_URL = '/user/login/'
 
 #static
 STATIC_URL = '/static/'

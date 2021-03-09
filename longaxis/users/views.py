@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import UpdateView, DetailView, FormView, View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -27,7 +28,6 @@ class SignUpView(FormView):
 class LoginView(FormView):
     template_name = 'login.html'
     form_class = LoginForm
-    success_url = '/'
 
     def form_valid(self, form):
         email = form.data.get('email')
@@ -36,6 +36,34 @@ class LoginView(FormView):
         login(self.request, user)
 
         return super().form_valid(form)
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        if next_url:
+            return next_url
+        else:
+            return reverse('gallery:gallery')
+
+# def LoginView(request):
+#     next_page = request.GET.get('next', '/gallery')
+#     # if request.user.is_authenticated:
+#     #     return HttpResponseRedirect(next_page)
+#     # else:
+#     if request.method == 'POST':
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, email=email, password=password)
+#             login(request, user)
+
+#             return HttpResponseRedirect(next_page)
+#         else:
+#             return render(request, "login.html", {'form': form})
+#     else:
+#         form = LoginForm()
+#         return render(request, "login.html", {'form': form})
+
 
 class ProfileView(DetailView):
     model = Profile
@@ -55,7 +83,7 @@ class ProfileView(DetailView):
         total_following = object.user.total_following()
         
         #is request user follow this profile user?
-        is_follow = True if self.request.user.following.filter(id = object.user.id).exists() else False
+        is_follow = True if self.request.user.is_authenticated and self.request.user.following.filter(id = object.user.id).exists() else False
        
         context['total_followers'] = total_followers
         context['total_following'] = total_following
@@ -66,8 +94,10 @@ class ProfileView(DetailView):
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
     model = Profile
     template_name = 'profile_update.html'
-    success_url = '/'
-    fields = ['state_message', "intro", 'profile_image']
+    form_class = ProfileUpdateForm
+
+    def get_success_url(self):
+        return reverse('users:profile', args=[self.kwargs['username']])
 
     def get_object(self):
         return get_object_or_404(Profile, user__username=self.kwargs['username'])

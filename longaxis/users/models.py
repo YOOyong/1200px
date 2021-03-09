@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
+from PIL import Image
 import random
 import os
 # Create your models here.
@@ -105,6 +106,30 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, *args,**kwargs):
+        super().save()
+        img = Image.open(self.profile_image.path)
+
+        if img.height > img.width:
+            left = 0
+            right = img.width
+            top = (img.height - img.width) / 2
+            bottom = (img.height + img.width) /2
+            img = img.crop((left,top,right, bottom))
+
+        if img.height < img.width:
+            left = (img.width - img.height) / 2
+            right = (img.width + img.height) / 2
+            top = 0
+            bottom = img.height
+            img = img.crop((left,top,right,bottom))
+
+        if img.height > 300 or img.width > 300:
+            img = img.resize((300,300), Image.ANTIALIAS)
+            img.save(self.profile_image.path, quality=90)
+
+
+
 # user의 save()가 실행될 때  profile도 save() 실행되도록 함
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -112,22 +137,3 @@ def create_user_profile(sender, instance, created, **kwargs):
         instance.profile.save()
     except ObjectDoesNotExist:
         Profile.objects.create(user=instance)
-
-
-# class Follow(models.Model):
-#     follow_from = models.ForeignKey(
-#         User, related_name='following', on_delete=models.CASCADE)
-#     follow_to = models.ForeignKey(
-#         User, related_name='follower', on_delete=models.CASCADE)
-#     created = models.DateTimeField(auto_now_add=True)
-
-#     class Meta:
-#         constraints = [
-#             models.UniqueConstraint(
-#                 fields=['follow_from', 'follow_to'], name='unique_follow')
-#         ]
-
-#         ordering = ['-created']
-
-#     def __str__(self):
-#         return f"{self.follow_from} follows {self.follow_to}"

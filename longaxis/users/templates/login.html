@@ -24,6 +24,7 @@
             {% endif%}
             {% endfor %}
             </fieldset>
+            <input type="hidden" name='next' value="{{ request.GET.next }}"/>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">login</button>
             <div>

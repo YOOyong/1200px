@@ -183,7 +183,6 @@ img {
       dataType: "json", 
 
       success: function(response){
-        $("#total_likes").html(response.total_likes);
         if (response['flag']){
           $("#icon"+pk).attr("class", "fas fa-heart fa-2x");
         }else{

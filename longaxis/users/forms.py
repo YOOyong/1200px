@@ -1,5 +1,8 @@
 from django import forms
 from .models import User, Profile
+from django.core.files import File
+from PIL import Image
+from django.core.files.images import get_image_dimensions
 
 class SignUpForm(forms.ModelForm):
     email = forms.EmailField(label='이메일', error_messages={'required': '이메일을 입력하세요.'},
@@ -64,13 +67,28 @@ class LoginForm(forms.Form):
                     self.add_error('email', forms.ValidationError('존재하지 않는 아이디입니다.'))
 
 
-class ProfileUpdateForm(forms.Form):
+class ProfileUpdateForm(forms.ModelForm):
 
     state_message = forms.CharField(label = '상태메세지')
     intro = forms.CharField(max_length=500,label='자기소개')
     profile_image = forms.ImageField()
 
+    def clean_profile_image(self):
+        img = self.cleaned_data.get('profile_image', None)
+        width, height = get_image_dimensions(self.cleaned_data.get('profile_image', None))
+        if img:
+            if height < 300 or width < 300:
+                raise forms.ValidationError('300px X 300px 이상의 사진을 올려주세요!')
+            if img.size > 1*1024*1024:
+                raise forms.ValidationError('1mb 이하의 사진을 올려주세요!')
+            return img
+        else:
+            raise forms.ValidationError('사진이 없습니다.')
+        
+
     class Meta:
         model = Profile
+        fields = ('state_message', 'intro', 'profile_image',)
+
     
 
