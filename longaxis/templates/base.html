@@ -38,7 +38,7 @@
         {%if user.is_authenticated %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-            aria-expanded="false">{{ user.username }}</a>
+            aria-expanded="false"><img class="rounded-circle" src="{{ user.profile.profile_image.url }}" width="30" height="30">&nbsp;&nbsp;{{ user.username }}</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{% url 'users:profile' user.username %}">Profile</a>
             <a class="dropdown-item" href="{% url 'users:logout'%}?next={{request.path}}">Logout</a>
