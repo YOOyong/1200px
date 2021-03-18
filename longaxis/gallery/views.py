@@ -48,10 +48,21 @@ class PhotoDetailView(DetailView):
         context['total_likes'] = total_likes
         return context
 
-class PhotoDeleteView(OwnerOnlyMixin, DeleteView):
-    model = Photo
-    template_name = 'photo_delete.html'
-    success_url = reverse_lazy('gallery:gallery')
+# class PhotoDeleteView(OwnerOnlyMixin, DeleteView):
+#     model = Photo
+#     template_name = 'photo_delete.html'
+#     success_url = reverse_lazy('gallery:gallery')
+
+@login_required
+def photo_delete(request, pk):
+    photo = get_object_or_404(Photo, pk=int(pk))
+
+    if (request.user == photo.user) or request.user.is_admin:
+        photo.delete()
+        return redirect('gallery:gallery')
+    else:
+        raise PermissionError
+
 
 class PhotoUpdateView(OwnerOnlyMixin, UpdateView):
     model = Photo
