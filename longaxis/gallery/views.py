@@ -10,13 +10,11 @@ from .forms import CommentForm
 import json
 # Create your views here.
 
-
 class GalleryView(ListView):
     model = Photo
     template_name = 'gallery.html'
     context_object_name = 'photos'
     ordering = ('-date_posted')
-
 
 class PhotoUploadView(LoginRequiredMixin, CreateView):
     model = Photo
@@ -110,7 +108,7 @@ def add_comment(request, pk):
                 
             comment.save()
             return redirect(parent_photo.get_absolute_url())
-            
+    
     return redirect(parent_photo.get_absolute_url())
 
 

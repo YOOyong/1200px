@@ -7,4 +7,5 @@ app_name = 'album'
 urlpatterns = [
     path('<str:username>/<int:pk>/', views.AlbumPhotoListView.as_view(), name='album_photo_list'),
     path('<str:username>/', views.UserAlbumListView.as_view(), name='user_album_list'),
+    path('<str:username>/create/', views.craete_album, name='create_album'),
 ]
