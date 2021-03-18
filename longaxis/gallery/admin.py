@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Photo, Comment, UserAlbum, AlbumPhoto
+from .models import Photo, Comment
 # Register your models here.
 
 class CommentInline(admin.StackedInline):
@@ -20,14 +20,4 @@ class PhotoAdmin(admin.ModelAdmin):
         
         return super(PhotoAdmin, self).get_inline_instances(request,obj)
 
-class AlbumPhotoInline(admin.TabularInline):
-    model = AlbumPhoto
-    extra = 2 # how many rows to show
-
-class UserAlbumAdmin(admin.ModelAdmin):
-    model= UserAlbum
-    list_display = ('album_name','user','date_created')
-    inlines = (AlbumPhotoInline, )
-
 admin.site.register(Photo, PhotoAdmin)
-admin.site.register(UserAlbum ,UserAlbumAdmin)

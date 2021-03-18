@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     #apps
     'users.apps.UsersConfig',
     'gallery.apps.GalleryConfig',
+    'album.apps.AlbumConfig',
 
     #cleanup
     'django_cleanup',

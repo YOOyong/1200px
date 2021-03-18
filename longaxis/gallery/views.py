@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
-from django.template import RequestContext
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from config.views import OwnerOnlyMixin
-from django.http import Http404, JsonResponse
-from .models import Photo, Comment, UserAlbum
+from .models import Photo, Comment
 from .forms import CommentForm
 import json
 # Create your views here.
@@ -53,6 +51,7 @@ class PhotoDetailView(DetailView):
 #     template_name = 'photo_delete.html'
 #     success_url = reverse_lazy('gallery:gallery')
 
+#class view는 확인 페이지가 필요함. 모달로 처리하기 위해 function 사용
 @login_required
 def photo_delete(request, pk):
     photo = get_object_or_404(Photo, pk=int(pk))
@@ -125,28 +124,6 @@ def delete_comment(request, pk):
         return redirect(parent_photo.get_absolute_url())
     else:
         raise PermissionError
-
-
-class UserAlbumListView(LoginRequiredMixin, ListView):
-    template_name = 'user_album_list.html'
-
-    def get_queryset(self):
-        if self.request.user.username == self.kwargs['username']:
-            queryset = UserAlbum.objects.filter(user__username=self.kwargs['username'])
-        else:
-            queryset = UserAlbum.objects.filter(user__username=self.kwargs['username']).filter(is_private=False)
-
-        return queryset
-    
-    #앨범추가 동작.
-    # def post():
-        #유저 먼저 확인.
-        # pass
-
-
-class AlbumPhotoListView(LoginRequiredMixin, DetailView):
-    template_name = 'user_album_detail.html'
-    model = UserAlbum
     
 
 
