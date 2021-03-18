@@ -128,8 +128,6 @@ class Profile(models.Model):
             img = img.resize((300,300), Image.ANTIALIAS)
             img.save(self.profile_image.path, quality=90)
 
-
-
 # user의 save()가 실행될 때  profile도 save() 실행되도록 함
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

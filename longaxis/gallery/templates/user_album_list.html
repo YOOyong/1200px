@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+{% for album in object_list.all %}
+
+<tr>
+ <td>
+     <a href = "{{ album.get_absolute_url }}">{{ album.album_name }} </a>
+ </td>
+ <td>
+     {{ album.date_created }}
+ </td>
+
+</tr>
+
+{% endfor%}
+
+{% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import AccessMixin
 
 class OwnerOnlyMixin(AccessMixin):
     raise_exception = True
-    permission_denied_message = "Owner only can update/delete the object"
+    permission_denied_message = "only Owner can access"
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()

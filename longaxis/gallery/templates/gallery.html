@@ -17,11 +17,6 @@ div {
 i{
   display: block;
 }
-img {
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
 *, *:before, *:after{
   margin: 0;
   padding: 0;
@@ -63,6 +58,11 @@ img {
 .content {
   position: relative;
   overflow: hidden;
+}
+.content .img {
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 .content .content-overlay {
@@ -140,7 +140,7 @@ img {
     <div style="width: calc({{photo.image.width}}px * 300 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 300 / {{photo.image.height}});">
       <div class="content">
        <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
-        <img src="{{ photo.image.url }}" alt="">
+        <img class="img" src="{{ photo.image.url }}" alt="">
         
         <!-- 오버레이부분 -->
         <a href = "{{ photo.get_absolute_url }}"><div class="content-overlay"></div></a>  <!-- 디테일 가는 링크 -->

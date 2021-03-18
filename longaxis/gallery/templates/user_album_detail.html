@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block contents %}
+
+<p>{{object.album_name}}</p>
+<p>{{object.user}}</p>
+<p>{{object.date_created}}</p>
+
+<h3>여기부턴 사진 리스트 </h3>
+
+{{ object.albumphoto_set.all }}
+
+<hr>
+
+{% for albumphoto in object.albumphoto_set.all %}
+
+ <a href="{{albumphoto.photo.get_absolute_url }}"><p><i>{{ albumphoto.photo }}</i></p></a>
+ <p><i>{{ albumphoto.date_added }}</i></p>
+
+ {%endfor%}
+
+{% endblock %}

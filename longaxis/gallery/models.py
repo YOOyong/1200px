@@ -34,7 +34,7 @@ class Photo(models.Model):
     likes = models.ManyToManyField(User, blank=True, default=None, related_name='likes')
 
     def __str__(self):
-        return self.title
+        return f"[{self.pk}]{self.title}"
     
     def get_absolute_url(self):
         return reverse('gallery:detail' , args=[str(self.id)])
@@ -53,12 +53,37 @@ class Comment(models.Model):
     parent_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='comments')
     comment_text = models.CharField(max_length=300, verbose_name='comment_text', blank=False)
     date_posted = models.DateTimeField(auto_now_add=True)
-    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True,blank=True,related_name='sub_comment', default=None)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True,blank=True, related_name='sub_comment', default=None)
 
     def __str__(self):
         return f"[photo_pk{self.parent_photo.id}] {self.user}'s comment"
 
-    
+
+class UserAlbum(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='albums')
+    album_photos = models.ManyToManyField(Photo, through='AlbumPhoto')
+    album_name = models.CharField(max_length=50, blank=False)
+    is_private = models.BooleanField(default=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.user}'s album [{self.album_name}]"
+
+    def get_absolute_url(self):
+        return reverse('gallery:album_photo_list', args=[self.user, str(self.id)])
+
+class AlbumPhoto(models.Model):
+    album = models.ForeignKey(UserAlbum, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return f"{self.photo} is in {self.album}"
+
+    class Meta:
+        ordering = ['-date_added']
+
     
 
 

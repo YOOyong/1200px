@@ -1,38 +1,51 @@
 {% extends "base.html" %}
+{% block header %}
+<style>
+.img-fluid {
+ max-height: 700px;
+ width: auto;
+}
+</style>
+{%endblock%}
+    
 {% block contents %}
 <div class="container-fluid">
-    <div class="row mt-2">
-        <div class="col-md-8">
-            <div align="center"><img src="{{ object.image.url }}" class="img-fluid"></div>
-            <div class="mr-">
+    <div class="row mx-lg-1 justify-content-center">
+        <div class="col-md-12 mt-2 text-center" style="max-height:720px; background-color: rgba(35,35,35);">
+            <img src="{{ object.image.url }}" class="img-fluid my-2">
+        </div>
+
+        <div class="col-md-8 mt-3" style="background-color: rgb(255, 255, 255);">
+            <div class='container'>
                 <a href="{% url 'users:profile' object.user %}">
                     <h3>{{ object.user }}</h3>
                 </a>
+
+                <p>{{ object.title }} </p>
+                <p>{{ object.description }} </p>
+                <P>{{ object.date_uploaded}} </P>
+                <p id='total_likes'> {{ total_likes }} </P>
+                {% for user in object.likes.all %}
+                {{ user }}
+                {% endfor %}
+                {% if object.user == request.user %}
+
+                <a href="{% url 'gallery:delete' object.id %}" class="btn btn-primary">delete</a>
+                <a href="{% url 'gallery:update' object.id %}" class="btn btn-primary">update</a>
+
+                {% endif %}
+                <br>
+
+                <button class='like_button btn btn-primary' value="{{object.id}}">좋아요 테스트</button>
             </div>
-            <p>{{ object.title }} </p>
-            <p>{{ object.description }} </p>
-            <P>{{ object.date_uploaded}} </P>
-            <p id='total_likes'> {{ total_likes }} </P>
-            {% for user in object.likes.all %}
-            {{ user }}
-            {% endfor %}
-
-            {% if object.user == request.user %}
-
-            <a href="{% url 'gallery:delete' object.id %}" class="btn btn-primary">delete</a>
-            <a href="{% url 'gallery:update' object.id %}" class="btn btn-primary">update</a>
-
-            {% endif %}
-            <br>
-
-            <button class='like_button btn btn-primary' value="{{object.id}}">좋아요 테스트</button>
         </div>
+        <!-- <div class="col-1"></div> -->
 
         <!-- comment section -->
-        <div class="col-md-4">
+        <div class="col-md-4 mt-3">
             <!-- comment add form -->
             {% if user.is_authenticated%}
-            <div class=" my-3">
+            <div class="">
                 <p class='mb-0 ml-2'>Leave a comment ! </p>
                 <!-- 장고 폼을 쓰면서 인풋 그룹으로 한줄에 버튼을 쓰려면 폼 자체를 인풋그룹으로 만들어야 함.  -->
                 <!-- https://stackoverflow.com/questions/61342133/django-bootstrap-input-group-not-rendering-desired-html-css-with-form -->
@@ -63,8 +76,9 @@
                     {% if not comment.parent_comment %}
                     <div class="row">
                         <div>
-                            <a href="{% url 'users:profile' comment.user %}"> 
-                            <img class="rounded-circle d-flex ml-1" src="{{ comment.user.profile.profile_image.url }}" width="40" height="40">
+                            <a href="{% url 'users:profile' comment.user %}">
+                                <img class="rounded-circle d-flex ml-1"
+                                    src="{{ comment.user.profile.profile_image.url }}" width="40" height="40">
                             </a>
                         </div>
                         <div class='col'>
@@ -81,16 +95,18 @@
                             <p class="card-text">{{comment.comment_text}}</p>
                             <div class="d-flex">
                                 <div>
-                                {% if user.is_authenticated%}
-                                    <a data-toggle="collapse" href="#subcommentform{{comment.id}}"><small class="text-info">
-                                    <i class="fas fa-reply fa-rotate-180"></i> Reply</small>
+                                    {% if user.is_authenticated%}
+                                    <a data-toggle="collapse" href="#subcommentform{{comment.id}}"><small
+                                            class="text-info">
+                                            <i class="fas fa-reply fa-rotate-180"></i> Reply</small>
                                     </a>
-                                {%endif%}
+                                    {%endif%}
                                 </div>
                                 {% if comment.sub_comment.exists %}
                                 <div class="ml-auto">
                                     <a data-toggle="collapse" href="#subcomments{{comment.id}}">
-                                    <small><i class="fas fa-angle-down"></i> 답글 {{comment.sub_comment.count}}개 보기</small>
+                                        <small><i class="fas fa-angle-down"></i> 답글 {{comment.sub_comment.count}}개
+                                            보기</small>
                                     </a>
                                 </div>
                                 {%endif%}
@@ -104,8 +120,8 @@
                             {% csrf_token %}
                             {% for field in comment_form %}
                             <input type='hidden' name='parent_comment' value='{{ comment.pk }}'>
-                            <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}"
-                                name="{{ field.name }}" required maxlength="300">
+                            <input type="{{ field.field.widget.input_type }}" class="form-control"
+                                id="{{ field.id_for_label }}" name="{{ field.name }}" required maxlength="300">
                             {% if field.errors %}
                             <div class='invalid-feedback'>
                                 <small class='text-danger'>{{ field.errors }}</samll>
@@ -117,19 +133,20 @@
                             </div>
                         </form>
                     </div>
-            
+
                     <hr class="my-3">
 
                     <!-- sub comment area -->
                     {% if comment.sub_comment.exists %}
                     <div class="collapse" id="subcomments{{comment.id}}">
-                    {%for sub_comment in comment.sub_comment.all %}
-                    
+                        {%for sub_comment in comment.sub_comment.all %}
+
                         <div class="row">
                             <div class="ml-3">┖</div>
                             <div>
-                                <a href="{% url 'users:profile' sub_comment.user %}"> 
-                                <img class="rounded-circle d-flex ml-1" src="{{ sub_comment.user.profile.profile_image.url }}" width="35" height="35">
+                                <a href="{% url 'users:profile' sub_comment.user %}">
+                                    <img class="rounded-circle d-flex ml-1"
+                                        src="{{ sub_comment.user.profile.profile_image.url }}" width="35" height="35">
                                 </a>
                             </div>
                             <div class='col'>
@@ -146,9 +163,9 @@
                                 <p class="card-text">{{sub_comment.comment_text}}</p>
                             </div>
                         </div>
-                    
-                    <hr class="my-3">
-                    {%endfor%}
+
+                        <hr class="my-3">
+                        {%endfor%}
                     </div>
                     {%endif%}
                     {%endif %}
@@ -183,6 +200,8 @@
     </div>
 </div>
 
+<!-- modal -->
+
 <!-- scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -192,7 +211,7 @@
             type: "POST",
             url: "{% url 'gallery:photo_like' %}", // 통신할 url을 지정
             data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션
-            dataType: "json",   
+            dataType: "json",
 
             success: function (response) {
                 $("#total_likes").html(response.total_likes);

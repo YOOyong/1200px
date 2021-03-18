@@ -14,4 +14,6 @@ urlpatterns = [
     path('like', views.photo_like, name='photo_like'),
     path('<int:pk>/add_comment/', views.add_comment, name='add_comment'),
     path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
+    path('<str:username>/<int:pk>/', views.AlbumPhotoListView.as_view(), name='album_photo_list'),
+    path('<str:username>/albums/', views.UserAlbumListView.as_view(), name='user_album_list'),
 ]
