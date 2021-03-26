@@ -18,7 +18,7 @@ class UserAlbum(models.Model):
         return f"{self.user}'s album [{self.album_name}]"
 
     def get_absolute_url(self):
-        return reverse('album:album_photo_list', args=[self.user, str(self.id)])
+        return reverse('album:album', args=[self.user, str(self.id)])
 
 class AlbumPhoto(models.Model):
     album = models.ForeignKey(UserAlbum, on_delete=models.CASCADE)

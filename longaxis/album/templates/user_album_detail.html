@@ -2,7 +2,8 @@
 
 {% block contents %}
 
-<p>{{object.album_name}}</p>
+<p>{{object.album_name}} {%if request.user == object.user %} <a herf='#' data-toggle='modal'  data-target='#rename_album'><small>edit</small></a>
+    <a herf='#' data-toggle='modal'  data-target='#delete_album'><small>delete</small> {%endif%} </p>
 <p>{{object.user}}</p>
 <p>{{object.date_created}}</p>
 
@@ -18,5 +19,51 @@
  <p><i>{{ albumphoto.date_added }}</i></p>
 
  {%endfor%}
+
+<!-- modals -->
+<div class="modal fade" id='rename_album' tabindex="-1" role="dialog"
+    aria-labelledby="delete_post_ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="font-weight-bold">앨범 변경</p>
+                <button type="button" class="close" data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <form method="POST" action="{% url 'album:rename_album' object.pk%}">
+            {% csrf_token %}
+            {{ form }}
+            <div class="text-right mr-1">
+                <a type="button" class='btn btn-primary' data-dismiss="modal">취소</a>
+                <button type="submit"  class="btn btn-danger">변경</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id='delete_album' tabindex="-1" role="dialog"
+        aria-labelledby="deleteAlbumModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="font-weight-bold">앨범을 삭제하시겠습니까?</p>
+                    <button type="button" class="close" data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body'>
+                    {{album.album_name}}
+                </div>
+                <div class="text-right mr-1">
+                    <a type="button" class='btn btn-primary' data-dismiss="modal">취소</a>
+                    <a role="button" class="btn btn-danger" href="{% url 'album:delete_album' object.pk %}">삭제</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 {% endblock %}
