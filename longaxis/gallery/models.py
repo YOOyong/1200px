@@ -37,7 +37,7 @@ class Photo(models.Model):
         return f"[{self.pk}]{self.title}"
     
     def get_absolute_url(self):
-        return reverse('gallery:detail' , args=[str(self.id)])
+        return reverse('gallery:detail' , args=[str(self.pk)])
 
     def total_likes(self):
         return self.likes.count()

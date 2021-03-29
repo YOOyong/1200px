@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.http import JsonResponse, HttpResponse
+from django.core import serializers
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from config.views import OwnerOnlyMixin
 from django.urls import reverse_lazy
 from .models import UserAlbum
+from gallery.models import Photo
+from users.models import User
 from .forms import AlbumForm
 
 # Create your views here.
@@ -91,7 +95,51 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
         else:
             raise PermissionError
 
-def add_photo(request, pk):
-    pass
+@login_required
+def get_album_list(request):
+    if request.method == 'GET':
+        user = request.user
+        albums = user.albums.all()
+
+    return JsonResponse(serializers.serialize('json', albums), safe = False)
+
+@login_required
+def add_photo(request):
+    #form으로 앨범 키와 사진 키를 받아올 것.
+    if request.method == 'POST':
+        photo_pk = request.POST.photo_pk
+        album_pk = request.POST.photo_pk
+
+        photo = get_object_or_404(Photo, pk=photo_pk)
+        album = get_object_or_404(UserAlbum, pk=album_pk)
+        
+        try:
+            album.album_photos.add(photo)
+        except:
+            pass
+
+        return HttpResponse('add done')
+
+    return HttpResponse('wrong approch')
+
+@login_required
+def del_photo(request, pk):
+    if request.method == 'POST':
+        album = get_object_or_404(UserAlbum, pk=pk)
+        if (request.user == album.user) or request.user.is_admin:
+            photo_pk = request.POST.get('photo_pk')
+            print(photo_pk)
+            photo = get_object_or_404(Photo, pk=photo_pk)
+            try:
+                album.album_photos.remove(photo)
+            except:
+                pass
+            
+            return redirect('album:album', username=request.user.username, pk=pk)
+        else:
+            raise PermissionError
+
+    return HttpResponse('wrong approch')
+
             
         
