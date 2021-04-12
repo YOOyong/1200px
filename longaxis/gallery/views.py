@@ -15,7 +15,7 @@ class GalleryView(ListView):
     template_name = 'gallery.html'
     context_object_name = 'photos'
     ordering = ('-date_posted')
-
+    
 class PhotoUploadView(LoginRequiredMixin, CreateView):
     model = Photo
     template_name = 'upload.html'

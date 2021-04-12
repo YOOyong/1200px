@@ -10,6 +10,7 @@ from .models import UserAlbum
 from gallery.models import Photo
 from users.models import User
 from .forms import AlbumForm
+import json
 
 # Create your views here.
 
@@ -101,7 +102,8 @@ def get_album_list(request):
         user = request.user
         albums = user.albums.all()
 
-    return JsonResponse(serializers.serialize('json', albums), safe = False)
+    return JsonResponse(serializers.serialize('json', albums), status=200, safe = False, content_type="application/json")
+    # return HttpResponse(json.dumps(albums), content_type="application/json")
 
 @login_required
 def add_photo(request):

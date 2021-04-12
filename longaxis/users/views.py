@@ -73,7 +73,6 @@ class ProfileView(DetailView):
     def get_object(self):
         return get_object_or_404(Profile, user__username=self.kwargs['username']) 
 
-    #굳이 여기서 처리해야 하는가??
     def get_context_data(self, *args, **kwargs):
         object = self.get_object()
         context = super().get_context_data(*args, **kwargs)
@@ -84,11 +83,11 @@ class ProfileView(DetailView):
         
         #is request user follow this profile user?
         is_follow = True if self.request.user.is_authenticated and self.request.user.following.filter(id = object.user.id).exists() else False
-       
+        
         context['total_followers'] = total_followers
         context['total_following'] = total_following
         context['is_follow'] = is_follow
-        
+
         return context
         
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):

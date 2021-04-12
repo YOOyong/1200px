@@ -270,7 +270,7 @@ test 버튼을 만든다!!.
     });
   })
 
-  $("#album_list_modal_button").click(function () {
+  $("#album_list_modal_button").one('click', function () {
     $.ajax({
       type: "GET",
       url: "{% url 'album:get_album_list' %}",
@@ -278,14 +278,11 @@ test 버튼을 만든다!!.
 
       success: function (response) {
         if (response) {
-          $("#modal_body_album_list").html(jQuery.type(response)) //test
-          $.each(response, function(i, item) {
+          const jsonData = JSON.parse(response)
+
+          $.each(jsonData, function(i, item) {
             $("#modal_body_album_list").append('<li>'+item.fields.album_name+'</li>');
             });
-          
-          for (var i = 0; i < response.length; i++) {
-                    $('#modal_body_album_list').append('<li>'+response[i].fields.album_name+'</li>');
-                }
         } else {
           $("#modal_body_album_list").html('None');
         }
