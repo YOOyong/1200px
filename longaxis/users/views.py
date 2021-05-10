@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import UpdateView, DetailView, FormView, View
+from django.views.generic import UpdateView, DetailView, FormView, View, ListView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config.views import OwnerOnlyMixin
+from gallery.models import Photo
 from .models import User, Profile
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
 # Create your views here.
@@ -76,7 +77,7 @@ class ProfileView(DetailView):
     def get_context_data(self, *args, **kwargs):
         object = self.get_object()
         context = super().get_context_data(*args, **kwargs)
-        
+
         #get total followers and following
         total_followers = object.user.total_followers()
         total_following = object.user.total_following()
@@ -84,10 +85,14 @@ class ProfileView(DetailView):
         #is request user follow this profile user?
         is_follow = True if self.request.user.is_authenticated and self.request.user.following.filter(id = object.user.id).exists() else False
         
+        #get this users photo
+        photos = Photo.objects.filter(user=object.user.id)
+
         context['total_followers'] = total_followers
         context['total_following'] = total_following
         context['is_follow'] = is_follow
-
+        context['photos'] = photos
+        
         return context
         
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
@@ -128,6 +133,24 @@ class FollowView(LoginRequiredMixin, View):
             request.user.following.add(follow_to)
 
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+class MyFeedView(LoginRequiredMixin, ListView):
+    template_name = 'myfeed.html'
+    context_object_name = 'photos'
+    
+    def get_queryset(self):
+        current_user = self.request.user
+        followlist = current_user.following.all()
+
+        return Photo.objects.filter(user__in=followlist)
+
+
+
+    
+
+   
+
 
         
 
