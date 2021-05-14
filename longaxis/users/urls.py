@@ -11,5 +11,5 @@ urlpatterns = [
     path('myfeed/', views.MyFeedView.as_view(),name='myfeed'),
     path('<str:username>/',views.ProfileView.as_view(), name='profile'),
     path('<str:username>/update/',views.ProfileUpdateView.as_view(), name='profile_update'),
-    
+    path('<str:username>/likedphotoapi',views.liked_photo_api, name='api_liked_photo_view')
 ]

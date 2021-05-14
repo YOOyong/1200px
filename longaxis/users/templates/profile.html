@@ -2,6 +2,7 @@
 
 {% block header %}
 <link rel='stylesheet' href="../../static/gallery_style.css">
+
 {% endblock%}
 
 {% block contents %}
@@ -15,99 +16,159 @@
 {% if request.user.is_authenticated and request.user != object.user %}
 <div class="text-center">
 
-    {% if is_follow %}
-    <form method="POST" action="{% url 'follow' %}">
-        {% csrf_token %}
-        <input type="hidden" name='follow_to' , value="{{ object.user }}">
-        <button type="submit" class="btn btn-primary">언팔로우</button>
-    </form>
-    {% else %}
-    <form method="POST" action="{% url 'follow' %}">
-        {% csrf_token %}
-        <input type="hidden" name='follow_to' , value="{{ object.user }}">
-        <button type="submit" class="btn btn-primary">팔로우</button>
-    </form>
-    {% endif %}
-    <div>
-        {% endif%}
+  {% if is_follow %}
+  <form method="POST" action="{% url 'follow' %}">
+    {% csrf_token %}
+    <input type="hidden" name='follow_to' , value="{{ object.user }}">
+    <button type="submit" class="btn btn-primary">언팔로우</button>
+  </form>
+  {% else %}
+  <form method="POST" action="{% url 'follow' %}">
+    {% csrf_token %}
+    <input type="hidden" name='follow_to' , value="{{ object.user }}">
+    <button type="submit" class="btn btn-primary">팔로우</button>
+  </form>
+  {% endif %}
+  <div>
+    {% endif%}
 
-        <div class="row justify-content-md-center mt-5">
+    <div class="row justify-content-md-center mt-5">
 
-            <div class="card border-secondary col-md-3">
+      <div class="card border-secondary col-md-3">
 
-                <div class="card-title">
-                    프로필 임시
-                </div>
-                <div class="card-body">
-                    <p> {{ object.user }} </p>
-                    <p> {{ object.state_message }}</p>
-
-                    <p> '이 사람이' 팔로우 하는 사람 리스트 </p>
-                    {% for following in object.user.following.all %}
-                    <p> {{ following }}</p>
-                    {% endfor%}
-                    <i>{{ total_following }} 명</i>
-
-                    <br>
-
-                    <p> '이 사람을' 팔로우 하는 사람 리스트 </p>
-                    {% for follower in object.user.followers.all %}
-                    <p> {{ follower }}</p>
-                    {% endfor%}
-                    <i>{{ total_followers }} 명</i>
-
-                </div>
-            </div>
+        <div class="card-title">
+          프로필 임시
         </div>
-        {% if request.user == object.user %}
-        <a href="{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
-        {% endif %}
+        <div class="card-body">
+          <p> {{ object.user }} </p>
+          <p> {{ object.state_message }}</p>
+
+          <p> '이 사람이' 팔로우 하는 사람 리스트 </p>
+          {% for following in object.user.following.all %}
+          <p> {{ following }}</p>
+          {% endfor%}
+          <i>{{ total_following }} 명</i>
+
+          <br>
+
+          <p> '이 사람을' 팔로우 하는 사람 리스트 </p>
+          {% for follower in object.user.followers.all %}
+          <p> {{ follower }}</p>
+          {% endfor%}
+          <i>{{ total_followers }} 명</i>
+
+        </div>
+      </div>
     </div>
+    {% if request.user == object.user %}
+    <a href="{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
+    {% endif %}
+  </div>
 </div>
-<div class='mx-4'>
-    <section>
+<!-- 탭바 -->
+<ul class="justify-content-center nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#photos">Photos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#liked">Liked</a>
+  </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+  <div class="tab-pane fade show active" id="photos">
+    <!-- 이사람이 찍은 사진 -->
+    <div class='mx-4'>
+      <section>
         {% for photo in photos %}
-        <div style="width: calc({{photo.image.width}}px * 200 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 200 / {{photo.image.height}});">
-            <div class="content">
-                <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
-                <img class="img" src="{{ photo.image.url }}" alt="">
+        <div
+          style="width: calc({{photo.image.width}}px * 200 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 200 / {{photo.image.height}});">
+          <div class="content">
+            <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
+            <img class="img" src="{{ photo.image.url }}" alt="">
 
-                <!-- 오버레이부분 -->
-                <a href="{{ photo.get_absolute_url }}">
-                    <div class="content-overlay"></div>
-                </a> <!-- 디테일 가는 링크 -->
-                <div class="content-details">
-                    <a href="{% url 'users:profile' photo.user %}">
-                        <!-- 유저프로필 링크 -->
-                        <div class="test-left cut-text">
-                            <img class="rounded-circle" src="{{ photo.user.profile.profile_image.url }}" width="30"
-                                height="30"> {{ photo.user }}
-                        </div>
-                    </a>
+            <!-- 오버레이부분 -->
+            <a href="{{ photo.get_absolute_url }}">
+              <div class="content-overlay"></div>
+            </a> <!-- 디테일 가는 링크 -->
+            <div class="content-details">
+              <a href="{% url 'users:profile' photo.user %}">
+                <!-- 제목 -->
+                <div class="test-left cut-text">
+                  {{photo.title }}
                 </div>
-
-
-                <div class="content-details">
-                    <button class='like_button' value="{{ photo.id }}">
-                        <!-- 좋아요 링크 -->
-                        <div class="test-right">
-                            {% if photo in request.user.likes.all %}
-                            <i id="icon{{ photo.id }}" class="fas fa-heart fa-2x"></i>
-                            {%else%}
-                            <i id="icon{{ photo.id }}" class="far fa-heart fa-2x"></i>
-                            {% endif %}
-                        </div>
-                    </button>
-                </div>
-
+              </a>
             </div>
+            <div class="content-details">
+              <button class='like_button' value="{{ photo.id }}">
+                <!-- 좋아요 링크 -->
+                <div class="test-right">
+                  {% if photo in request.user.likes.all %}
+                  <i id="icon{{ photo.id }}" class="fas fa-heart fa-2x"></i>
+                  {%else%}
+                  <i id="icon{{ photo.id }}" class="far fa-heart fa-2x"></i>
+                  {% endif %}
+                </div>
+              </button>
+            </div>
+
+          </div>
         </div>
         {% endfor %}
-    </section>
+      </section>
+    </div>
+    <!-- 이사람이 찍은 사진 -->
+  </div>
+  <div class="tab-pane fade" id="liked">
+    <!-- 좋아요 누른 사진 -->
+    <div class='mx-4'>
+      <section>
+        {% for photo in like_photos %}
+        <div
+          style="width: calc({{photo.image.width}}px * 200 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 200 / {{photo.image.height}});">
+          <div class="content">
+            <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
+            <img class="img" src="{{ photo.image.url }}" alt="">
+    
+            <!-- 오버레이부분 -->
+            <a href="{{ photo.get_absolute_url }}">
+              <div class="content-overlay"></div>
+            </a> <!-- 디테일 가는 링크 -->
+            <div class="content-details">
+              <a href="{% url 'users:profile' photo.user %}">
+                <!-- 유저프로필 링크 -->
+                <div class="test-left cut-text">
+                  <img class="rounded-circle" src="{{ photo.user.profile.profile_image.url }}" width="30" height="30"> {{ photo.user }}
+                </div>
+              </a>
+            </div>
+    
+    
+            <div class="content-details">
+              <button class='like_button' value="{{ photo.id }}">
+                <!-- 좋아요 링크 -->
+                <div class="test-right">
+                  {% if photo in request.user.likes.all %}
+                  <i id="icon{{ photo.id }}" class="fas fa-heart fa-2x"></i>
+                  {%else%}
+                  <i id="icon{{ photo.id }}" class="far fa-heart fa-2x"></i>
+                  {% endif %}
+                </div>
+              </button>
+            </div>
+    
+          </div>
+        </div>
+        {% endfor %}
+      </section>
+    </div>
+    <!-- 좋아요 누른 사진 -->
+  </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
+  // 좋아요버튼
   $(".like_button").click(function () {
     var pk = $(this).attr('value')
     $.ajax({
@@ -128,7 +189,7 @@
       },
     });
   })
-
+  // 앨범리스트
   $("#album_list_modal_button").one('click', function () {
     $.ajax({
       type: "GET",
@@ -139,9 +200,9 @@
         if (response) {
           const jsonData = JSON.parse(response)
 
-          $.each(jsonData, function(i, item) {
-            $("#modal_body_album_list").append('<li>'+item.fields.album_name+'</li>');
-            });
+          $.each(jsonData, function (i, item) {
+            $("#modal_body_album_list").append('<li>' + item.fields.album_name + '</li>');
+          });
         } else {
           $("#modal_body_album_list").html('None');
         }
@@ -151,6 +212,9 @@
       },
     });
   })
+  // 좋아요 api호출 스크립트 추가.
+
+
 
 </script>
 

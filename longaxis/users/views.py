@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.views.generic import UpdateView, DetailView, FormView, View, ListView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import serializers
 from config.views import OwnerOnlyMixin
 from gallery.models import Photo
 from .models import User, Profile
@@ -87,13 +88,16 @@ class ProfileView(DetailView):
         
         #get this users photo
         photos = Photo.objects.filter(user=object.user.id)
-
+        like_photos = object.user.likes.all().order_by('-date_posted')
+        
+        context['like_photos'] = like_photos
         context['total_followers'] = total_followers
         context['total_following'] = total_following
         context['is_follow'] = is_follow
         context['photos'] = photos
         
         return context
+
         
 class ProfileUpdateView(LoginRequiredMixin, OwnerOnlyMixin, UpdateView):
     model = Profile
@@ -144,6 +148,20 @@ class MyFeedView(LoginRequiredMixin, ListView):
         followlist = current_user.following.all()
 
         return Photo.objects.filter(user__in=followlist)
+
+
+
+# test
+def liked_photo_api(request, username):
+    if request.method == 'GET':
+        #좋아요한 것만 가져오기
+        profile_user = get_object_or_404(User, username = username)
+        liked_photos = profile_user.likes.all()
+
+        return JsonResponse(serializers.serialize('json', liked_photos), status=200, safe = False, content_type="application/json")
+
+    
+
 
 
 
