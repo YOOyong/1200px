@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
 from config.views import OwnerOnlyMixin
-from gallery.models import Photo
+from gallery.models import Photo, LikePhoto
 from .models import User, Profile
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
 # Create your views here.
@@ -88,7 +88,7 @@ class ProfileView(DetailView):
         
         #get this users photo
         photos = Photo.objects.filter(user=object.user.id)
-        like_photos = object.user.likes.all().order_by('-date_posted')
+        like_photos = LikePhoto.objects.filter(user = object.user)
         
         context['like_photos'] = like_photos
         context['total_followers'] = total_followers

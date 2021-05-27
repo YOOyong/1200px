@@ -122,35 +122,35 @@
     <!-- 좋아요 누른 사진 -->
     <div class='mx-4'>
       <section>
-        {% for photo in like_photos %}
+        {% for like in like_photos %}
         <div
-          style="width: calc({{photo.image.width}}px * 200 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 200 / {{photo.image.height}});">
+          style="width: calc({{like.photo.image.width}}px * 200 / {{like.photo.image.height}});  flex-grow: calc({{like.photo.image.width}} * 200 / {{like.photo.image.height}});">
           <div class="content">
-            <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
-            <img class="img" src="{{ photo.image.url }}" alt="">
+            <i style="padding-bottom: calc({{like.photo.image.height }} / {{like.photo.image.width }} * 100%)"></i>
+            <img class="img" src="{{ like.photo.image.url }}" alt="">
     
             <!-- 오버레이부분 -->
-            <a href="{{ photo.get_absolute_url }}">
+            <a href="{{ like.photo.get_absolute_url }}">
               <div class="content-overlay"></div>
             </a> <!-- 디테일 가는 링크 -->
             <div class="content-details">
-              <a href="{% url 'users:profile' photo.user %}">
+              <a href="{% url 'users:profile' like.photo.user %}">
                 <!-- 유저프로필 링크 -->
                 <div class="test-left cut-text">
-                  <img class="rounded-circle" src="{{ photo.user.profile.profile_image.url }}" width="30" height="30"> {{ photo.user }}
+                  <img class="rounded-circle" src="{{ like.photo.user.profile.profile_image.url }}" width="30" height="30"> {{ photo.user }}
                 </div>
               </a>
             </div>
     
     
             <div class="content-details">
-              <button class='like_button' value="{{ photo.id }}">
+              <button class='like_button' value="{{ like.photo.id }}">
                 <!-- 좋아요 링크 -->
                 <div class="test-right">
-                  {% if photo in request.user.likes.all %}
-                  <i id="icon{{ photo.id }}" class="fas fa-heart fa-2x"></i>
+                  {% if like.photo in request.user.likes.all %}
+                  <i id="icon{{ like.photo.id }}" class="fas fa-heart fa-2x"></i>
                   {%else%}
-                  <i id="icon{{ photo.id }}" class="far fa-heart fa-2x"></i>
+                  <i id="icon{{ like.photo.id }}" class="far fa-heart fa-2x"></i>
                   {% endif %}
                 </div>
               </button>
