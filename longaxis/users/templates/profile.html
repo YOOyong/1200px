@@ -7,65 +7,45 @@
 
 {% block contents %}
 
-<h1>프로필 임시</h1>
-{% if object.profile_image %}
-<img src="{{ object.profile_image.url }}" alt="">
-{%endif%}
+<div class='container-fluid text-center'>
 
+  <div class="mt-5">
+    {% if object.profile_image %}
+    <img src="{{ object.profile_image.url }}" alt="" class="img-raised rounded-circle img-fluid", width = '150px', height="150px">
+    {%endif%}
+    <br>
+    <h1 class="mt-3"> {{ object.user }} </h1>
+    
 
-{% if request.user.is_authenticated and request.user != object.user %}
-<div class="text-center">
-
-  {% if is_follow %}
-  <form method="POST" action="{% url 'follow' %}">
-    {% csrf_token %}
-    <input type="hidden" name='follow_to' , value="{{ object.user }}">
-    <button type="submit" class="btn btn-primary">언팔로우</button>
-  </form>
-  {% else %}
-  <form method="POST" action="{% url 'follow' %}">
-    {% csrf_token %}
-    <input type="hidden" name='follow_to' , value="{{ object.user }}">
-    <button type="submit" class="btn btn-primary">팔로우</button>
-  </form>
-  {% endif %}
-  <div>
+    {% if request.user.is_authenticated and request.user != object.user %}
+        {% if is_follow %}
+        <form method="POST" action="{% url 'follow' %}">
+          {% csrf_token %}
+          <input type="hidden" name='follow_to' , value="{{ object.user }}">
+          <button type="submit" class="btn btn-primary rounded-pill btn-sm">Unfollow</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{% url 'follow' %}">
+          {% csrf_token %}
+          <input type="hidden" name='follow_to' , value="{{ object.user }}">
+          <button type="submit" class="btn btn-primary rounded-pill btn-sm">Follow</button>
+        </form>
+        {% endif %}
     {% endif%}
+    <h5 class="mt-3">{{total_followers}} Followers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{total_following}} Following </h5>
 
-    <div class="row justify-content-md-center mt-5">
+    <p class="mt-5"> {{ object.state_message }}</p>
 
-      <div class="card border-secondary col-md-3">
+    
 
-        <div class="card-title">
-          프로필 임시
-        </div>
-        <div class="card-body">
-          <p> {{ object.user }} </p>
-          <p> {{ object.state_message }}</p>
-
-          <p> '이 사람이' 팔로우 하는 사람 리스트 </p>
-          {% for following in object.user.following.all %}
-          <p> {{ following }}</p>
-          {% endfor%}
-          <i>{{ total_following }} 명</i>
-
-          <br>
-
-          <p> '이 사람을' 팔로우 하는 사람 리스트 </p>
-          {% for follower in object.user.followers.all %}
-          <p> {{ follower }}</p>
-          {% endfor%}
-          <i>{{ total_followers }} 명</i>
-
-        </div>
-      </div>
-    </div>
-    {% if request.user == object.user %}
-    <a href="{% url 'users:profile_update' object.user.username %}" class="btn btn-primary">수정하기</a>
-    {% endif %}
+   
+      
   </div>
-</div>
+</div> 
+<!-- 설명섹션 -->
+
 <!-- 탭바 -->
+<br><br>
 <ul class="justify-content-center nav nav-tabs">
   <li class="nav-item">
     <a class="nav-link active" data-toggle="tab" href="#photos">Photos</a>
@@ -81,7 +61,7 @@
       <section>
         {% for photo in photos %}
         <div
-          style="width: calc({{photo.image.width}}px * 200 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 200 / {{photo.image.height}});">
+          style="width: calc({{photo.image.width}}px * 250 / {{photo.image.height}});  flex-grow: calc({{photo.image.width}} * 250 / {{photo.image.height}});">
           <div class="content">
             <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
             <img class="img" src="{{ photo.image.url }}" alt="">
@@ -124,7 +104,7 @@
       <section>
         {% for like in like_photos %}
         <div
-          style="width: calc({{like.photo.image.width}}px * 200 / {{like.photo.image.height}});  flex-grow: calc({{like.photo.image.width}} * 200 / {{like.photo.image.height}});">
+          style="width: calc({{like.photo.image.width}}px * 250 / {{like.photo.image.height}});  flex-grow: calc({{like.photo.image.width}} * 250 / {{like.photo.image.height}});">
           <div class="content">
             <i style="padding-bottom: calc({{like.photo.image.height }} / {{like.photo.image.width }} * 100%)"></i>
             <img class="img" src="{{ like.photo.image.url }}" alt="">

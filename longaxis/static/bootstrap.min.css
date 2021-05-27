@@ -341,7 +341,7 @@ template {
 }
 
 .h1, h1 {
-    font-size: 2rem
+    font-size: 2.4rem
 }
 
 .h2, h2 {
@@ -9441,7 +9441,7 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .btn-group-sm>.btn, .btn-sm {
-    font-size: 10px
+    font-size: 15px
 }
 
 .btn-warning, .btn-warning:focus, .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled):active {
