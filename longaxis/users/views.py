@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.views.generic import UpdateView, DetailView, FormView, View, ListView
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
 from config.views import OwnerOnlyMixin

@@ -25,6 +25,7 @@ urlpatterns = [
     path('gallery/', include('gallery.urls')),
     path('follow/', FollowView.as_view(), name ='follow'),
     path('album/', include('album.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
