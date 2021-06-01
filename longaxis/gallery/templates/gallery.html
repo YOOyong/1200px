@@ -27,8 +27,18 @@
           </a>
         </div>
 
-
+        
         <div class="content-details">
+
+          {% if user.is_authenticated %}
+            <!-- 앨범 링크 -->
+            <div class="test-albumadd">
+              <a href="#" id='album_list_modal_button' data-toggle='modal' data-target='#album_list_modal' style ="color: white">
+                <i class="far fa-images fa-2x"></i>
+              </a>
+            </div>
+          {% endif %}
+       
           <button class='like_button' value="{{ photo.id }}">
             <!-- 좋아요 링크 -->
             <div class="test-right">
