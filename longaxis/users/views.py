@@ -8,6 +8,7 @@ from config.views import OwnerOnlyMixin
 from gallery.models import Photo, LikePhoto
 from .models import User, Profile
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
+from django.db.models import Q
 # Create your views here.
 
 class SignUpView(FormView):
@@ -140,16 +141,15 @@ class FollowView(LoginRequiredMixin, View):
 
 
 class MyFeedView(LoginRequiredMixin, ListView):
-    template_name = 'myfeed.html'
+    template_name = 'feed.html'
     context_object_name = 'photos'
     
     def get_queryset(self):
-        current_user = self.request.user
-        followlist = current_user.following.all()
-
-        return Photo.objects.filter(user__in=followlist)
-
-
+        user = get_object_or_404(User, username = self.kwargs['username'])
+        followlist = user.following.all()
+        
+        return Photo.objects.filter(Q(user = user) | Q(user__in = followlist)).order_by('-date_posted')
+ 
 
 # test
 def liked_photo_api(request, username):

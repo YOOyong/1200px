@@ -110,7 +110,7 @@ def add_photo(request):
     #form으로 앨범 키와 사진 키를 받아올 것.
     if request.method == 'POST':
         photo_pk = request.POST.photo_pk
-        album_pk = request.POST.photo_pk
+        album_pk = request.POST.album_pk
 
         photo = get_object_or_404(Photo, pk=photo_pk)
         album = get_object_or_404(UserAlbum, pk=album_pk)

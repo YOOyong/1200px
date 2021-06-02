@@ -41,6 +41,9 @@ class Photo(models.Model):
     def total_likes(self):
         return self.likes.count()
 
+    class Mete:
+        ordering = ['-date_posted']
+
     #django-claenup 에서 대신해줌
     # def delete(self, *args, **kargs):
     #     if self.image:

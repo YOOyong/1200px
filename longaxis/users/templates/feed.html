@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-<link rel='stylesheet' href="../../static/gallery_style.css">
+<link rel='stylesheet' href="/static/gallery_style.css">
 {% endblock%}
 
 {% block contents %}
@@ -29,6 +29,17 @@
 
 
         <div class="content-details">
+          
+          {% if user.is_authenticated %}
+          <!-- 앨범 링크 -->
+          <div class="test-albumadd">
+            <a href="#" id='album_list_modal_button' data-toggle='modal' data-target='#album_list_modal' style ="color: white">
+              <i class="far fa-images fa-2x"></i>
+            </a>
+          </div>
+        {% endif %}
+
+
           <button class='like_button' value="{{ photo.id }}">
             <!-- 좋아요 링크 -->
             <div class="test-right">
@@ -43,34 +54,6 @@
 
       </div>
     </div>
-
-    <!-- 사진 추가 모달 -->
-    <!-- <div class="modal fade" id='album_list_modal' tabindex="-1" role="dialog" aria-labelledby="album_list_ModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <p class="font-weight-bold">앨범에 추가</p>
-            <button type="button" class="close" data-dismiss='modal' aria-label='Close'>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class='modal-body'>
-            <div class='modal_body_album_list'>
-              모달바디 앨범 리스트
-            </div>
-            <form class="input-group" id='form' method="POST" action="#">
-              폼테스트
-              <div class="text-right mr-1">
-                <a type="button" class='btn btn-primary' data-dismiss="modal">취소</a>
-                <input type="submit" class="btn btn-danger" value="추가">
-              </div>
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div> -->
     {% endfor %}
   </section>
 </div>
