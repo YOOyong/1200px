@@ -13,7 +13,6 @@
       <div class="content">
         <i style="padding-bottom: calc({{photo.image.height }} / {{photo.image.width }} * 100%)"></i>
         <img class="img" src="{{ photo.image.url }}" alt="">
-
         <!-- 오버레이부분 -->
         <a href="{{ photo.get_absolute_url }}">
           <div class="content-overlay"></div>
@@ -33,7 +32,7 @@
           {% if user.is_authenticated %}
             <!-- 앨범 링크 -->
             <div class="test-albumadd">
-              <a href="#" id='album_list_modal_button' data-toggle='modal' data-target='#album_list_modal' style ="color: white">
+              <a href="#" class='add_to_album' id='album_list_modal_button' data-toggle='modal', data-id ="{{photo.pk}}" data-target='#album_list_modal' style ="color: white">
                 <i class="far fa-images fa-2x"></i>
               </a>
             </div>
@@ -58,10 +57,6 @@
 </div>
 <hr>
 
-test 버튼을 만든다!!.
-<a href="#" id='album_list_modal_button' class="btn btn-primary testbutton" data-toggle='modal' data-target='#album_list_modal'>테스트버튼</a>
-
-
 <div class="modal fade" id='album_list_modal' tabindex="-1" role="dialog" aria-labelledby="album_list_ModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -73,19 +68,22 @@ test 버튼을 만든다!!.
                 </button>
             </div>
             <div class='modal-body'>
-              <div id='modal_body_album_list'>
-                모달바디 앨범 리스트
-              </div>
-                <form class="input-group" id='form' method="POST"
-                    action="#">
-                    폼테스트
-                    <div class="text-right mr-1">
-                        <a type="button" class='btn btn-primary' data-dismiss="modal">취소</a>
-                        <input type="submit" class="btn btn-danger" value="추가">
-                    </div>
+              <div class="mr-1">
+                <form class='addphotoform' method="POST" id='addphotoform'>
+                      {% csrf_token %}
+                      사진을 추가할 앨범을 선택하세요.<br>
+                        <select class="form-select" id='album_pk' name='album_pk' aria-label="Default select example">
+                          {% for album in user.albums.all %}
+                          <option value='{{album.pk}}'>{{album.album_name}}</option>
+                          {% endfor%}
+                        </select>
+                      <input type="hidden" name="photo_pk" id="photo_pk" value=""/>  
+                        
+                      <button type="button submit" class="btn btn-danger">추가</button>                    
                 </form>
+              </div>
+              <a type="button" class='btn btn-primary' data-dismiss="modal">닫기</a>
             </div>
-
         </div>
     </div>
 </div>
@@ -93,6 +91,8 @@ test 버튼을 만든다!!.
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
+
+  // 좋아요
   $(".like_button").click(function () {
     var pk = $(this).attr('value')
     $.ajax({
@@ -113,29 +113,55 @@ test 버튼을 만든다!!.
       },
     });
   })
-
-  $("#album_list_modal_button").one('click', function () {
+  //앨범에 사진추가
+  $(document).on("click", ".add_to_album", function () {
+     var photo_pk = $(this).data('id');
+     $(".addphotoform #photo_pk").val( photo_pk );
+  });
+ 
+  $('#addphotoform').on('submit', function(event){
+    event.preventDefault();  // 이게 필요했음.
     $.ajax({
-      type: "GET",
-      url: "{% url 'album:get_album_list' %}",
-      dataType: "json",
-
-      success: function (response) {
-        if (response) {
-          const jsonData = JSON.parse(response)
-
-          $.each(jsonData, function(i, item) {
-            $("#modal_body_album_list").append('<li>'+item.fields.album_name+'</li>');
-            });
-        } else {
-          $("#modal_body_album_list").html('None');
-        }
+      type: "POST",
+      url: "{% url 'album:add_photo' %}", // 통신할 url을 지정
+      data: { csrfmiddlewaretoken: '{{ csrf_token }}',
+              photo_pk : $('#photo_pk').val(),
+              album_pk : $('#album_pk').val()
+            }, // 서버로 전송할 데이터
+      success: function () {
+        console.log('added');
       },
-      error: function (request, status, error) {
-        window.location.replace("../user/login")
+      error: function () {
+        console.log('failed');  
       },
     });
+    $("#album_list_modal").modal('hide');
   })
+
+ 
+  // $(".add_to_album").one('click', function () {
+  //   $.ajax({
+  //     type: "GET",
+  //     url: "{% url 'album:get_album_list' %}",
+  //     dataType: "json",
+
+  //     success: function (response) {
+  //       if (response) {
+  //         const jsonData = JSON.parse(response)
+
+  //         $.each(jsonData, function(i, item) {
+  //             $("#album_list").append('<option value=' + item.fields.album_id + '>' + item.fields.album_name + '</option>');
+  //             });
+        
+  //       } else {
+  //         $("#album_list").html('None');
+  //       }
+  //     },
+  //     error: function (request, status, error) {
+  //       window.location.replace("../user/login")
+  //     },
+  //   });
+  // })
 
 </script>
 

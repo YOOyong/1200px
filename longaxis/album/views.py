@@ -96,6 +96,7 @@ class AlbumDetailView(LoginRequiredMixin, DetailView):
         else:
             raise PermissionError
 
+#unuse
 @login_required
 def get_album_list(request):
     if request.method == 'GET':
@@ -109,20 +110,18 @@ def get_album_list(request):
 def add_photo(request):
     #form으로 앨범 키와 사진 키를 받아올 것.
     if request.method == 'POST':
-        photo_pk = request.POST.photo_pk
-        album_pk = request.POST.album_pk
+        photo_pk = request.POST.get('photo_pk')
+        album_pk = request.POST.get('album_pk')
 
         photo = get_object_or_404(Photo, pk=photo_pk)
         album = get_object_or_404(UserAlbum, pk=album_pk)
         
-        try:
-            album.album_photos.add(photo)
-        except:
-            pass
-
+       
+        album.album_photos.add(photo)
         return HttpResponse('add done')
-
-    return HttpResponse('wrong approch')
+    else:
+        return HttpResponse('wrong approch')
+    
 
 @login_required
 def del_photo(request, pk):
