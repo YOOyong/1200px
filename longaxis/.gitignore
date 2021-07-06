@@ -2,6 +2,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,django,vscode,pycharm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,django,vscode,pycharm+all
 
+
+
+##db
+/db.sqlite3
+
+
 ### Django ###
 *.log
 *.pot
